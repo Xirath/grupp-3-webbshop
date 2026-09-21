@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Projekt** | Webbshoppen – Kundportal (Fas 2) |
 | **Beställare** | Nordic Retail Group (Fiktiv uppdragsgivare) |
-| **Utvecklingsteam** | Konsultteamet / Projektgruppen |
+| **Utvecklingsteam** | SVIV-TEAM |
 | **Projekttid** | 21 september 2026 – 13 oktober 2026 |
 | **Slutleverans & Demo** | Tisdag 13 oktober 2026 |
 | **Teknisk Stack** | Next.js (App Router), React, TypeScript/JavaScript, CSS/Tailwind |
@@ -110,8 +110,8 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 > 3. Kopiera över den valda koden från Fas 1 och pusha som er första commit (`Initial commit from Phase 1`).  
 > 4. Lägg in detta dokument (`PRD.md`), `kontrakt.md` och `docs/` i repot.
 
-* **Vald Fas 1-kodbas:** Bygger på kod skriven av `[Namn / Repolänk till Fas 1]`
-* **Nytt gemensamt GitHub-repo:** `[Länk till gruppens nya GitHub-repo]`
+* **Vald Fas 1-kodbas:** Bygger på kod skriven av `https://github.com/ashahsana-sketch/Web-Shop`
+* **Nytt gemensamt GitHub-repo:** `https://github.com/Xirath/grupp-3-webbshop`
 * **Eventuella städnings- eller refaktoreringsbehov i basen innan start:**
   - `[Beskriv kort vad som behöver fixas, t.ex. rensa död kod, städa CSS, fixa datastruktur]`
 
@@ -139,9 +139,9 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 *Formulera minst 3–5 konkreta User Stories för ert MVP och era valda funktioner. Använd Gherkin-format (Given/When/Then) för acceptanskriterierna.*
 
 #### User Story 1: [Titel, t.ex. Söka efter produkter]
-* **Som en** *kund som letar efter en specifik produkt*
-* **vill jag** *kunna skriva in ett sökord i sökfältet och omedelbart se matchande varor*
-* **så att** *jag slipper bläddra igenom hela sortimentet manuellt.*
+* **As a** *Customer*
+* **I would like** *to seqarch for a specific product*
+* **so that** *I don't have to scroll through all products to find what i'm looking for*
 
 **Acceptanskriterier (Given / When / Then):**
 * **Given** att jag befinner mig på produktkatalogen
@@ -149,25 +149,35 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **Then** uppdateras URL:en till `?search=jacka` och endast produkter med "jacka" i titeln eller beskrivningen visas.
 * **And** om inga varor matchar visas ett tydligt meddelande: "Inga produkter matchade din sökning".
 
-#### User Story 2: [Fyll i er egen]
-* **Som en** `[roll]`
-* **vill jag** `[handling]`
-* **så att** `[nytta]`
+#### User Story 2:
+* **As a** `Customer`
+* **I would like** ` to see all the products availble in a list/grid `
+* **so that** `so that I can get an overview of what the store is offering`
 
 **Acceptanskriterier:**
-* **Given** `...`
-* **When** `...`
-* **Then** `...`
+* **Given** `that i'm on the product page`
+* **When** `no filters have been applied`
+* **Then** `I should see all products`
 
-#### User Story 3: [Fyll i er egen]
-* **Som en** `[roll]`
-* **vill jag** `[handling]`
-* **så att** `[nytta]`
+#### User Story 3:
+* **As a** `Customer`
+* **I would like** `to see detailed information about a product`
+* **so that** `I can learn about the product before buying it`
 
 **Acceptanskriterier:**
-* **Given** `...`
-* **When** `...`
-* **Then** `...`
+* **Given** `I click on a specific product`
+* **When** `in the product store`
+* **Then** `I can see the detailed information about the product`
+
+#### User Story 4: 
+* **As a** `Customer`
+* **I would like** `to be able to see the pages of the shop clearly in my mobile phone`
+* **so that** `I can shop from anywhere  ` 
+
+**Acceptanskriterier:**
+* **Given** `viewing the app from my phone`
+* **When** `trying to shop`
+* **Then** `I can see the detailed information about the product and get a good overview of all products`
 
 ---
 
@@ -189,12 +199,12 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 ### 5.5 Teamets Definition of Done (DoD)
 *Vad krävs i er grupp för att en Issue/Ticket ska få flyttas till "Done"? (Kryssa i och anpassa)*:
 
-* [ ] Koden löser den specificerade User Storyn och uppfyller acceptanskriterierna.
-* [ ] Koden är testad lokalt och bygger utan fel (`npm run build`).
-* [ ] Inga TypeScript- eller lint-fel i terminalen.
-* [ ] Pull Request är skapad och granskad (Code Review) av minst en annan teammedlem.
-* [ ] Mergad till `main`-branchen.
-* [ ] Relaterad issue är stängd i GitHub Projects.
+* [x] Koden löser den specificerade User Storyn och uppfyller acceptanskriterierna.
+* [x] Koden är testad lokalt och bygger utan fel (`npm run build`).
+* [x] Inga TypeScript- eller lint-fel i terminalen.
+* [x] Pull Request är skapad och granskad (Code Review) av minst två teammedlemmar.
+* [x] Mergad till `dev`-branchen.
+* [x] Relaterad issue är stängd i GitHub Projects.
 
 ---
 
