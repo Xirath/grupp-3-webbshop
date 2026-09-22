@@ -188,6 +188,18 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **Given** `that I am currently viewing the store`
 * **When** `I click on the shopping cart link/icon`
 * **Then** `navigate to the shopping cart page and show the orders total cost and list all the products and how many of each is ordered and their price`
+
+**User Story 8: Pagination**
+As a Customer
+I would like to navigate between pages in the product catalogue
+so that I can easily browse all available products without having every product displayed on the same page
+
+**Acceptance criteria:**
+Given there are more products than can be displayed on one page
+When I am browsing the product store
+Then I can navigate forwards, backwards, or directly to a specific page, and the selected page is shown in the URL
+
+
   
 ---
 
