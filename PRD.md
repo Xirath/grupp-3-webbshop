@@ -138,7 +138,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 ### 5.3 Teamets User Stories & Acceptanskriterier
 *Formulera minst 3–5 konkreta User Stories för ert MVP och era valda funktioner. Använd Gherkin-format (Given/When/Then) för acceptanskriterierna.*
 
-#### User Story 1: [Titel, t.ex. Söka efter produkter]
+#### User Story 1: Search products
 * **As a** *Customer*
 * **I would like** *to seqarch for a specific product*
 * **so that** *I don't have to scroll through all products to find what i'm looking for*
@@ -149,7 +149,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **Then** uppdateras URL:en till `?search=jacka` och endast produkter med "jacka" i titeln eller beskrivningen visas.
 * **And** om inga varor matchar visas ett tydligt meddelande: "Inga produkter matchade din sökning".
 
-#### User Story 2:
+#### User Story 2: product catalog
 * **As a** `Customer`
 * **I would like** ` to see all the products availble in a list/grid `
 * **so that** `so that I can get an overview of what the store is offering`
@@ -159,8 +159,8 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **When** `no filters have been applied`
 * **Then** `I should see all products`
 
-#### User Story 3:
-* **As a** `Customer`
+#### User Story 3:  detalied product page
+* **As a** `Customer` 
 * **I would like** `to see detailed information about a product`
 * **so that** `I can learn about the product before buying it`
 
@@ -169,7 +169,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **When** `in the product store`
 * **Then** `I can see the detailed information about the product`
 
-#### User Story 4: 
+#### User Story 4: Mobile friendly shop
 * **As a** `Customer`
 * **I would like** `to be able to see the pages of the shop clearly in my mobile phone`
 * **so that** `I can shop from anywhere  ` 
