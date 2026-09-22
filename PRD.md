@@ -149,7 +149,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **Then** uppdateras URL:en till `?search=jacka` och endast produkter med "jacka" i titeln eller beskrivningen visas.
 * **And** om inga varor matchar visas ett tydligt meddelande: "Inga produkter matchade din sökning".
 
-#### User Story 2: product catalog
+#### User Story 2: Product catalog
 * **As a** `Customer`
 * **I would like** ` to see all the products availble in a list/grid `
 * **so that** `so that I can get an overview of what the store is offering`
@@ -159,7 +159,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **When** `no filters have been applied`
 * **Then** `I should see all products`
 
-#### User Story 3:  detalied product page
+#### User Story 3:  Detalied product page
 * **As a** `Customer` 
 * **I would like** `to see detailed information about a product`
 * **so that** `I can learn about the product before buying it`
@@ -179,6 +179,16 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **When** `trying to shop`
 * **Then** `I can see the detailed information about the product and get a good overview of all products`
 
+#### User Story 5: Shopping Cart
+* **As a** `Customer`
+* **I would like** `to view my shopping cart`
+* **so that** `I get a summary of my order, the products and how many and how much they cost and the total for the order` 
+
+**Acceptanskriterier:**
+* **Given** `that I am currently viewing the store`
+* **When** `I click on the shopping cart link/icon`
+* **Then** `navigate to the shopping cart page and show the orders total cost and list all the products and how many of each is ordered and their price`
+  
 ---
 
 ### 5.4 Valda Fördjupningsmoduler & Arkitekturbeslut (ADR)
