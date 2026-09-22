@@ -1,4 +1,4 @@
-# 🤝 Gruppkontrakt: SVIV team
+# 🤝 Gruppkontrakt: SVKIV team -(svenska kodänglar i världen)
 
 | Information | Detaljer |
 | :--- | :--- |
@@ -23,8 +23,11 @@ För att skapa ett tryggt och förutsägbart arbetsklimat har vi kommit överens
 * **Kärntid:** Vi förväntas vara tillgängliga för samarbete, parprogrammering och snabba frågor i **gruppens Teams-kanal** mellan kl. **[09:00]** och **[16:00]**.
 * **Frånvaro & Förhinder:** Om någon blir sjuk eller får förhinder ska detta meddelas i **gruppens Teams-kanal** senast **30 minuter innan vår valda standup-tid**.
 * **Ambitionsnivå i gruppen:**  
-  * "Vi fokuserar på att bygga en stabil MVP och se till att alla i gruppen förstår koden."*  
-  * "Om tid tillåter så diskuterar vi eventuella mer avancerade moduler och molntjänster att lägga till."*
+  * "Se till att alla i gruppen förstår koden genom att visa varandra våran kod och förklara för varandra"* 
+  * "Reptera tekniker vi gått igenom och utforska nya tekniker, tex. betalösning och autentisering. Lära sig nya tredjeparts bibliotek."
+  * "Lära oss att jobba som grupp genom öppen kommunikation och gemensam beslutsprocess där alla är inkluderade. "
+  * "Att konternueligt stämma av och hjälpa varandra."
+  * "Vi välkomnar konflikter så att vi kan arbetar vidare framåt som en grupp!"
 
 ---
 
