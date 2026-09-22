@@ -45,7 +45,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 Edit product
               </Link>
               <Link
-                href="/"
+                href="/admin"
                 className="min-h-10 shrink-0 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2"
               >
                 Back to products
