@@ -213,7 +213,7 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
         <div className="flex gap-4 pt-2">
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/admin")}
             className="w-1/2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-gray-700 hover:bg-gray-50 font-medium transition-colors text-center"
           >
             Cancel / Back
