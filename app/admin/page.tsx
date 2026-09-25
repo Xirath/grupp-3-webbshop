@@ -1,8 +1,8 @@
-import type { Category, Product, ProductsResponse } from "./types";
-import Header from "./components/Header/Header";
-import SummaryCards from "./components/Summary-card/SummaryCard";
-import SearchBar from "./components/SearchBar";
-import ProductTable from "./components/ProductTable";
+import type { Category, Product, ProductsResponse } from "../types";
+import Header from "../components/Header/Header";
+import SummaryCards from "../components/Summary-card/SummaryCard";
+import SearchBar from "../components/SearchBar";
+import ProductTable from "../components/ProductTable";
 
 const DEFAULT_LIMIT = "6";
 const API_BASE_URL = "http://localhost:4000";
@@ -72,7 +72,23 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main>
-     <h1 className="text-2xl font-bold m-0 text-center">new webshop</h1>
+      <Header />
+      <SummaryCards
+        total={allProducts.length}
+        inStock={summary.inStock}
+        lowStock={summary.lowStock}
+        outOfStock={summary.outOfStock}
+      />
+      <SearchBar categories={categoriesData} />
+      <div className="page-container">
+        <ProductTable
+          products={products}
+          currentPage={page}
+          totalPages={pages}
+          totalItems={total}
+          pageSize={limit}
+        />
+      </div>
     </main>
   );
 }
