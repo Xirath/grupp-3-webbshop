@@ -1,7 +1,7 @@
 import type { Category, Product, ProductsResponse } from "../types";
 import Header from "../components/Header/Header";
 import SummaryCards from "../components/Summary-card/SummaryCard";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/Searchbar/SearchBar";
 import ProductTable from "../components/ProductTable";
 
 const DEFAULT_LIMIT = "6";

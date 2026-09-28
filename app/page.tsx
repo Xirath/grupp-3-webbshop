@@ -1,6 +1,7 @@
 import type { Category, Product, ProductsResponse } from "./types";
 import ProductGrid from "./components/ProductGrid/ProductGrid";
 import WebshopHeader from "./components/Header/webshopHeader";
+import WebshopSearchbar from "./components/Searchbar/webshopSearchbar";
 
 const DEFAULT_LIMIT = "6";
 const API_BASE_URL = "http://localhost:4000";
@@ -47,7 +48,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main>
-      <h1 className="text-2xl font-bold m-0 text-center">new webshop</h1>
+      <WebshopHeader/>
+      <WebshopSearchbar categories={categoriesData} />
       <ProductGrid
         products={products}
         currentPage={page}
