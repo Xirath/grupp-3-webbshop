@@ -28,12 +28,12 @@ body {
 .page-container {
   width: min(1160px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 24px 0 48px;
+  padding: 24px 0 24px;
 }
 
 @media (max-width: 768px) {
   .page-container {
     width: calc(100% - 20px);
-    padding: 0px 0 32px;
+    padding: 0px 0 24px;
   }
 }

@@ -1,9 +1,12 @@
-import type { Category, Product, ProductsResponse } from "./types";
 import ProductGrid from "./components/ProductGrid/ProductGrid";
 import WebshopHeader from "./components/Header/webshopHeader";
-
-const DEFAULT_LIMIT = "6";
-const API_BASE_URL = "http://localhost:4000";
+import { AdaptivePagination } from "./components/Pagination/AdaptivePagination";
+import { redirect } from "next/navigation";
+import {
+  buildProductSearchUrl,
+  productSearchParamSchema as SearchParamSchema,
+} from "./lib/validation";
+import { getCategories, getProducts } from "./lib/api";
 
 interface HomeProps {
   searchParams: Promise<{
@@ -15,39 +18,44 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  // 1. Next.js 15 requirement: await searchParams
   const params = await searchParams;
-  const currentPage = Number(params.page ?? 1);
-  const categoryId = params.categoryId;
-  const search = params.search;
 
-  // Build query filters
-  const categoryFilter = categoryId ? `&categoryId=${categoryId}` : "";
+  // Validate and parse search parameters using Zod schema
+  const {
+    page: requestedPage,
+    categoryId,
+    search,
+  } = SearchParamSchema.parse(params);
 
-  const searchFilter = search?.trim()
-    ? `&q=${encodeURIComponent(search.trim())}`
-    : "";
+  // Check if the current URL parameters are "dirty" (i.e., differ from the parsed values)
+  const isPageDirty =
+    params.page !== undefined && params.page !== String(requestedPage);
+  const isCategoryDirty =
+    params.categoryId !== undefined && params.categoryId !== categoryId;
 
-  const paginatedUrl = `${API_BASE_URL}/products?_page=${currentPage}&_limit=${DEFAULT_LIMIT}&_sort=id&_order=desc&_expand=category${categoryFilter}${searchFilter}`;
-  const allProductsUrl = `${API_BASE_URL}/products?_limit=1000`;
-  const categoriesUrl = `${API_BASE_URL}/categories`;
+  if (isPageDirty || isCategoryDirty) {
+    redirect(
+      buildProductSearchUrl({ categoryId, search, page: requestedPage }),
+    );
+  }
 
-  // 2. Parallel fetch with Next.js cache tags
-  const [paginatedData, categoriesData] = await Promise.all([
-    fetch(paginatedUrl, {
-      next: { tags: ["products"], revalidate: 15 },
-    }).then((res) => res.json() as Promise<ProductsResponse>),
-
-    fetch(categoriesUrl, {
-      next: { tags: ["categories"], revalidate: 3600 },
-    }).then((res) => res.json() as Promise<Category[]>),
+  // Fetch paginated products and categories in parallel
+  const [paginatedData, categories] = await Promise.all([
+    getProducts({ page: requestedPage, categoryId, search }),
+    getCategories(),
   ]);
 
+  // Destructure the paginated data for easier access
   const { products, total, page, pages, limit } = paginatedData;
 
+  // Redirect to the last page if the requested page exceeds the total number of pages
+  if (pages > 0 && requestedPage > pages) {
+    redirect(buildProductSearchUrl({ categoryId, search, page: pages }));
+  }
+
   return (
-    <main>
-      <h1 className="text-2xl font-bold m-0 text-center">new webshop</h1>
+    <main className="flex-1 flex flex-col justify-between max-w-7xl mx-auto mb-4 w-full">
+      <WebshopHeader />
       <ProductGrid
         products={products}
         currentPage={page}
@@ -55,6 +63,14 @@ export default async function Home({ searchParams }: HomeProps) {
         totalItems={total}
         pageSize={limit}
       />
+      <div className="mt-auto mb-12">
+        <AdaptivePagination
+          currentPage={page}
+          totalPages={pages}
+          totalItems={total}
+          pageSize={limit}
+        />
+      </div>
     </main>
   );
 }

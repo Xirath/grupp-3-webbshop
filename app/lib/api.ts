@@ -1,6 +1,36 @@
-import type { Category, Product } from "@/app/types";
+import type { Category, Product, ProductsResponse } from "@/app/types";
 
 const API_URL = "http://localhost:4000";
+const DEFAULT_LIMIT = "6";
+
+export interface ProductFilterParams {
+  page?: number;
+  limit?: number;
+  categoryId?: string;
+  search?: string;
+}
+
+export async function getProducts({
+  page = 1,
+  limit = Number(DEFAULT_LIMIT),
+  categoryId,
+  search,
+}: ProductFilterParams = {}): Promise<ProductsResponse> {
+  const query = new URLSearchParams({
+    _page: String(page),
+    _limit: String(limit),
+    _sort: "id",
+    _order: "desc",
+    _expand: "category",
+  });
+  if (categoryId) query.set("categoryId", categoryId);
+  if (search?.trim()) query.set("q", search.trim());
+  const response = await fetch(`${API_URL}/products?${query.toString()}`, {
+    next: { tags: ["products"], revalidate: 15 },
+  });
+  if (!response.ok) throw new Error("Failed to fetch products");
+  return response.json();
+}
 
 export async function getProduct(productId: number): Promise<Product | null> {
   const response = await fetch(
