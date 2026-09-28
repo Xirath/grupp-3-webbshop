@@ -31,11 +31,21 @@ interface CartProviderProps {
   children: ReactNode;
 }
 
+// Helper function to increase quantity without repeating the same code
+function increaseItemQuantity(item: CartItem): CartItem {
+  const maxQuantity = item.stock ?? Infinity;
+
+  return {
+    ...item,
+    quantity: Math.min(item.quantity + 1, maxQuantity),
+  };
+}
+
 export function CartProvider({ children }: CartProviderProps) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // I use localstorage here so the cart doesnt disappear when the page is refreshed
+  // Load cart from the browser when the app starts
   useEffect(() => {
     const savedCart = localStorage.getItem("shopping-cart");
 
@@ -51,7 +61,7 @@ export function CartProvider({ children }: CartProviderProps) {
     setIsLoaded(true);
   }, []);
 
-  // Save cart when something changes
+  // I use localStorage here so the cart doesn't disappear when the page is refreshed
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -66,15 +76,7 @@ export function CartProvider({ children }: CartProviderProps) {
 
       if (existingItem) {
         return currentItems.map((item) =>
-          item.id === product.id
-            ? {
-                ...item,
-                quantity: Math.min(
-                  item.quantity + 1,
-                  product.stock ?? Infinity
-                ),
-              }
-            : item
+          item.id === product.id ? increaseItemQuantity(item) : item
         );
       }
 
@@ -96,18 +98,9 @@ export function CartProvider({ children }: CartProviderProps) {
 
   function increaseQuantity(productId: number) {
     setCartItems((currentItems) =>
-      currentItems.map((item) => {
-        if (item.id !== productId) {
-          return item;
-        }
-
-        const maxQuantity = item.stock ?? Infinity;
-
-        return {
-          ...item,
-          quantity: Math.min(item.quantity + 1, maxQuantity),
-        };
-      })
+      currentItems.map((item) =>
+        item.id === productId ? increaseItemQuantity(item) : item
+      )
     );
   }
 
