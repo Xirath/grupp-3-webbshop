@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "./CartContent";
+import {formatPrice} from "../productUtils";
 
 export default function ShoppingCart() {
   const {
@@ -44,7 +45,7 @@ export default function ShoppingCart() {
                 <p className="font-semibold">{item.title}</p>
 
                 <p className="text-sm text-gray-500">
-                  {item.price.toFixed(2)} kr
+                  {formatPrice(item.price)} 
                 </p>
               </div>
 
@@ -83,7 +84,7 @@ export default function ShoppingCart() {
 
           <div className="flex justify-between pt-2 text-lg font-bold">
             <span>Total</span>
-            <span>{totalPrice.toFixed(2)} kr</span>
+            <span>{formatPrice(totalPrice)}</span>
           </div>
         </div>
       )}
