@@ -14,18 +14,28 @@ interface AddProductFormProps {
   nextId: number | string;
 }
 
-export default function AddProductForm({ categories, nextId }: AddProductFormProps) {
+function RequiredStar() {
+  return <span className="text-rose-700">*</span>;
+}
+
+export default function AddProductForm({
+  categories,
+  nextId,
+}: AddProductFormProps) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
-  const [state, formAction] = useActionState(async (prevState: any, formData: FormData) => {
-    const res = await addProduct(prevState, formData);
-    if (res.success) {
-      formRef.current?.reset(); // Form fields clear karne ke liye
-    }
-    return res;
-  }, null);
+  const [state, formAction] = useActionState(
+    async (prevState: any, formData: FormData) => {
+      const res = await addProduct(prevState, formData);
+      if (res.success) {
+        formRef.current?.reset(); // Form fields clear karne ke liye
+      }
+      return res;
+    },
+    null,
+  );
 
   return (
     <div className="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md border border-gray-100 my-6">
@@ -48,7 +58,8 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
 
         {state?.success && state?.createdId && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 font-medium">
-            ✅ Product <strong>#{state.createdId}</strong> was added successfully!
+            ✅ Product <strong>#{state.createdId}</strong> was added
+            successfully!
           </div>
         )}
 
@@ -60,8 +71,11 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
         </div>
 
         <div>
-          <label htmlFor="title" className="mb-1 block font-medium text-gray-700">
-            Product Title *
+          <label
+            htmlFor="title"
+            className="mb-1 block font-medium text-gray-700"
+          >
+            Product Title <RequiredStar />
           </label>
           <input
             id="title"
@@ -74,8 +88,11 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
         </div>
 
         <div>
-          <label htmlFor="brand" className="mb-1 block font-medium text-gray-700">
-            Brand
+          <label
+            htmlFor="brand"
+            className="mb-1 block font-medium text-gray-700"
+          >
+            Brand <RequiredStar />
           </label>
           <input
             id="brand"
@@ -88,8 +105,11 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="price" className="mb-1 block font-medium text-gray-700">
-              Price ($) *
+            <label
+              htmlFor="price"
+              className="mb-1 block font-medium text-gray-700"
+            >
+              Price ($) <RequiredStar />
             </label>
             <input
               id="price"
@@ -103,8 +123,11 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
           </div>
 
           <div>
-            <label htmlFor="stock" className="mb-1 block font-medium text-gray-700">
-              Stock *
+            <label
+              htmlFor="stock"
+              className="mb-1 block font-medium text-gray-700"
+            >
+              Stock <RequiredStar />
             </label>
             <input
               id="stock"
@@ -119,7 +142,10 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label htmlFor="weight" className="mb-1 block font-medium text-gray-700">
+            <label
+              htmlFor="weight"
+              className="mb-1 block font-medium text-gray-700"
+            >
               Weight (g)
             </label>
             <input
@@ -133,7 +159,10 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
           </div>
 
           <div>
-            <label htmlFor="rating" className="mb-1 block font-medium text-gray-700">
+            <label
+              htmlFor="rating"
+              className="mb-1 block font-medium text-gray-700"
+            >
               Rating (0-5)
             </label>
             <input
@@ -149,8 +178,11 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
           </div>
 
           <div>
-            <label htmlFor="categoryId" className="mb-1 block font-medium text-gray-700">
-              Category
+            <label
+              htmlFor="categoryId"
+              className="mb-1 block font-medium text-gray-700"
+            >
+              Category <RequiredStar />
             </label>
             <select
               id="categoryId"
@@ -168,8 +200,11 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
         </div>
 
         <div>
-          <label htmlFor="warrantyInfo" className="mb-1 block font-medium text-gray-700">
-            Warranty Information
+          <label
+            htmlFor="warrantyInfo"
+            className="mb-1 block font-medium text-gray-700"
+          >
+            Warranty Information <RequiredStar />
           </label>
           <select
             id="warrantyInfo"
@@ -185,7 +220,10 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
         </div>
 
         <div>
-          <label htmlFor="tags" className="mb-1 block font-medium text-gray-700">
+          <label
+            htmlFor="tags"
+            className="mb-1 block font-medium text-gray-700"
+          >
             Tags (comma-separated)
           </label>
           <input
@@ -198,7 +236,10 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
         </div>
 
         <div>
-          <label htmlFor="imageUrl" className="mb-1 block font-medium text-gray-700">
+          <label
+            htmlFor="imageUrl"
+            className="mb-1 block font-medium text-gray-700"
+          >
             Image URL
           </label>
           <input
@@ -209,6 +250,8 @@ export default function AddProductForm({ categories, nextId }: AddProductFormPro
             className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
         </div>
+
+        <p className="text-sm text-rose-700">* Required fields</p>
 
         <div className="flex gap-4 pt-2">
           <button
