@@ -1,6 +1,6 @@
 import type { Product } from "@/app/types";
 import ProductRow from "./ProductRow";
-import { Pagination } from "./Pagination/Pagination";
+import { AdaptivePagination } from "./Pagination/AdaptivePagination";
 import { productTableColumns } from "./productTableColumns";
 
 interface ProductTableProps {
@@ -82,7 +82,7 @@ export default function ProductTable({
         </table>
 
         <div className="border-t border-[#e5e5e5] bg-[#fafafa]">
-          <Pagination
+          <AdaptivePagination
             currentPage={currentPage}
             totalPages={totalPages}
             totalItems={totalItems}

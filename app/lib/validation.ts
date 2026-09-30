@@ -41,3 +41,27 @@ export const stockSchema = z.object({
     z.number().int().min(0, "Stock quantity must be zero or greater."),
   ),
 });
+
+// Validation schema for product search parameters
+export const productSearchParamSchema = z.object({
+  page: z.coerce.number().int().positive().catch(1),
+  categoryId: z.string().trim().optional(),
+  stock: z.string().optional(),
+  search: z.string().trim().max(100).optional(),
+});
+
+// Utility function to build a product search URL with optional query parameters
+export function buildProductSearchUrl(params: {
+  categoryId?: string;
+  search?: string;
+  page?: number;
+}): string {
+  const query = new URLSearchParams();
+
+  if (params.categoryId) query.set("categoryId", params.categoryId);
+  if (params.search) query.set("search", params.search);
+  if (params.page && params.page > 1) query.set("page", String(params.page));
+
+  const qs = query.toString();
+  return qs ? `/?${qs}` : "/";
+}

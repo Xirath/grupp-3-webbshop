@@ -32,7 +32,9 @@ export default async function ProductCard({ product }: { product: Product }) {
           product={product}
           showPercentage={product.price <= 100}
         />
-        <h2>{product?.title ?? "Unnamed Product"}</h2>
+        <h2 className="font-semibold text-sm line-clamp-2 h-10">
+          {product?.title ?? "Unnamed Product"}
+        </h2>
         <p className="text-sm text-gray-700">
           {" "}
           {product?.category?.name ?? "Uncategorized"}
