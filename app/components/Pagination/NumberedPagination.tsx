@@ -11,11 +11,10 @@ interface PaginationProps {
   pageSize: number;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
+// Note: Button-text overflows at > 999 pages, use SimplifiedPagination instead
+export const NumberedPagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
-  totalItems,
-  pageSize,
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -93,27 +92,18 @@ export const Pagination: React.FC<PaginationProps> = ({
     });
   };
 
-  const startItem = totalItems === 0 ? 0 : (safeCurrentPage - 1) * pageSize + 1;
-
-  const endItem = Math.min(safeCurrentPage * pageSize, totalItems);
-
   return (
     <nav
       aria-label="Pagination"
-      className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8"
+      className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 page-container"
     >
-      <p className="text-sm text-gray-600">
-        Showing <strong>{startItem}</strong> to <strong>{endItem}</strong> of{" "}
-        <strong>{totalItems}</strong> products
-      </p>
-
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 px-5">
         <button
           type="button"
           aria-label="Previous page"
           onClick={() => changePage(safeCurrentPage - 1)}
           disabled={safeCurrentPage === 1 || isPending}
-          className="p-2 rounded-md border hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-9 h-9 flex items-center justify-center rounded-md border hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <ChevronLeft size={18} />
         </button>
@@ -123,7 +113,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               <span
                 key={`ellipsis-${index}`}
                 aria-hidden="true"
-                className="px-2 text-gray-400"
+                className="w-9 h-9 flex items-center justify-center text-gray-400"
               >
                 ...
               </span>
@@ -135,7 +125,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 aria-current={page === safeCurrentPage ? "page" : undefined}
                 aria-label={`Go to page ${page}`}
                 disabled={isPending && page !== safeCurrentPage}
-                className={`min-w-9 h-9 px-3 rounded-md font-medium transition ${
+                className={`w-9 h-9 flex items-center justify-center tabular-nums rounded-md font-medium transition ${
                   page === safeCurrentPage
                     ? "bg-gray-800 text-white"
                     : "border hover:bg-gray-100"
@@ -151,7 +141,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           aria-label="Next page"
           onClick={() => changePage(safeCurrentPage + 1)}
           disabled={safeCurrentPage === safeTotalPages || isPending}
-          className="p-2 rounded-md border hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-9 h-9 flex items-center justify-center rounded-md border hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <ChevronRight size={18} />
         </button>

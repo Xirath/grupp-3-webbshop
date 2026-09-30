@@ -1,14 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Button from "./button";
-import { useCart } from "../ShoppingCart/CartContent";
-import ShoppingCart from "../ShoppingCart/ShoppingCart";
 
 export default function Header() {
-  const { totalItems } = useCart();
-  const [showCart, setShowCart] = useState(false);
-
   return (
     <main className="bg-white shadow-md">
       <div className="page-container">
@@ -25,19 +19,9 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setShowCart(!showCart)}
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 font-semibold"
-            >
-              🛒 Cart ({totalItems})
-            </button>
-
             <Button />
           </div>
         </header>
-
-        {showCart && <ShoppingCart />}
       </div>
     </main>
   );
