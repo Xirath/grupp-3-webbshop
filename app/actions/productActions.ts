@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { deleteProduct as deleteProductRequest } from "@/app/lib/api";
 import { addProduct as addProductRequest } from "@/app/lib/api";
 
@@ -23,5 +23,5 @@ export async function deleteProduct(productId: number) {
     throw new Error(`Unable to delete product ${productId}`);
   }
 
-  revalidatePath("/");
+  updateTag("products");
 }

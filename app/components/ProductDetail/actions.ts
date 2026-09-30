@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { updateProductStock } from "@/app/lib/api";
 import { stockSchema } from "@/app/lib/validation";
 
@@ -36,7 +36,6 @@ export async function updateStockAction(
     return { error: "Stock could not be updated. Please try again." };
   }
 
-  revalidatePath(`/product/${productId}`);
-  revalidatePath("/");
+  updateTag("products");
   return { success: true };
 }

@@ -130,6 +130,32 @@ export async function getProducts({
   return response.json();
 }
 
+export interface ProductStockResponse {
+  total: number;
+  lowStock: number;
+  outOfStock: number;
+  inStock: number;
+}
+
+export async function getProductStock({}: ProductFilterParams = {}): Promise<ProductStockResponse> {
+  const allProductsData = await fetch(`${API_URL}/products`, {
+    next: { tags: ["products"], revalidate: 15 },
+  }).then((res) => res.json() as Promise<{ products: Product[] }>);
+
+  const allProducts = allProductsData.products ?? [];
+  const summary = allProducts.reduce(
+    (acc, item) => {
+      const itemCount = item.stock ?? 0;
+      if (itemCount > 10) acc.inStock++;
+      else if (itemCount > 0) acc.lowStock++;
+      else acc.outOfStock++;
+      return acc;
+    },
+    { inStock: 0, lowStock: 0, outOfStock: 0, total: allProducts.length },
+  );
+  return summary;
+}
+
 export async function deleteProduct(productId: number): Promise<Response> {
   return fetch(`${API_URL}/products/${productId}`, {
     method: "DELETE",
