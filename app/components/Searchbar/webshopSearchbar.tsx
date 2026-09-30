@@ -65,7 +65,7 @@ export default function SearchBar({ categories }: SearchBarProps) {
           placeholder="Search products..."
           value={searchTerm}
           onChange={(event) => setSearchTerm(event.target.value)}
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none focus:border-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400"
+          className="flex-1 rounded-lg border border-gray-500/60 px-4 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
         />
 
         <label htmlFor="category-filter" className="sr-only">
@@ -76,7 +76,7 @@ export default function SearchBar({ categories }: SearchBarProps) {
           id="category-filter"
           value={selectedCategory}
           onChange={(event) => setSelectedCategory(event.target.value)}
-          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-400"
+          className="rounded-lg border border-gray-500/60 px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-400"
         >
           <option value="">All Categories</option>
 
@@ -86,14 +86,15 @@ export default function SearchBar({ categories }: SearchBarProps) {
             </option>
           ))}
         </select>
-        <button type="button" onClick={clearFilters} className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <button type="button" onClick={clearFilters} className="flex items-center justify-center gap-2 rounded-lg border border-gray-500/60 px-4 py-2 text-sm
+         focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-violet-600/30">
           x
         </button>
 
         <button
           type="button"
           onClick={handleFilter}
-          className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-400"
+          className="flex items-center justify-center gap-2 rounded-lg border border-gray-500/60  px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-violet-600/30  "
         >
           <Filter size={16} fill="currentColor" aria-hidden="true" />
           Filter
