@@ -24,6 +24,11 @@ export default async function Home({ searchParams }: HomeProps) {
   const stock = params.stock;
   const search = params.search;
 
+  const query = new URLSearchParams(
+    params as Record<string, string>,
+  ).toString();
+  const currentURL = `/admin${query ? `?${query}` : ""}`;
+
   // Build query filters
   const categoryFilter = categoryId ? `&categoryId=${categoryId}` : "";
   let stockFilter = "";
@@ -67,7 +72,7 @@ export default async function Home({ searchParams }: HomeProps) {
       else acc.outOfStock++;
       return acc;
     },
-    { inStock: 0, lowStock: 0, outOfStock: 0 }
+    { inStock: 0, lowStock: 0, outOfStock: 0 },
   );
 
   return (
@@ -83,6 +88,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <div className="page-container">
         <ProductTable
           products={products}
+          returnTo={currentURL}
           currentPage={page}
           totalPages={pages}
           totalItems={total}

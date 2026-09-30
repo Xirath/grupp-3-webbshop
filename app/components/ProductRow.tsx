@@ -10,12 +10,13 @@ import { useCart } from "./ShoppingCart/CartContent";
 
 interface ProductRowProps {
   product: Product;
+  returnTo: string;
 }
 
 const tdBase =
   "border-b border-[#e5e5e5] px-3.5 py-2.5 align-middle text-sm text-[#111111] max-md:px-2.5 max-md:py-3";
 
-export default function ProductRow({ product }: ProductRowProps) {
+export default function ProductRow({ product, returnTo }: ProductRowProps) {
   const { addToCart } = useCart();
 
   const stock = normalizeStock(product.stock);
@@ -92,7 +93,6 @@ export default function ProductRow({ product }: ProductRowProps) {
         className={`${tdBase} ${productTableColumns.actions} whitespace-nowrap`}
       >
         <div className="flex items-center gap-3 max-md:justify-end max-md:gap-1">
-
           {/* Add to cart */}
           <button
             type="button"
@@ -137,7 +137,7 @@ export default function ProductRow({ product }: ProductRowProps) {
 
           {/* Edit */}
           <Link
-            href={`/product/edit/${product.id}`}
+            href={`/product/edit/${product.id}?returnTo=${returnTo}`}
             className="grid h-7 w-7 cursor-pointer place-items-center border-0 bg-transparent text-[#111111] transition hover:text-violet-700 max-md:h-6.5 max-md:w-6.5"
             aria-label={`Edit ${product.title}`}
           >
