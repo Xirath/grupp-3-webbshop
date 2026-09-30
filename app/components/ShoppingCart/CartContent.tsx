@@ -70,13 +70,11 @@ export function CartProvider({ children }: CartProviderProps) {
 
   function addToCart(product: Product) {
     setCartItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item.id === product.id
-      );
+      const existingItem = currentItems.find((item) => item.id === product.id);
 
       if (existingItem) {
         return currentItems.map((item) =>
-          item.id === product.id ? increaseItemQuantity(item) : item
+          item.id === product.id ? increaseItemQuantity(item) : item,
         );
       }
 
@@ -92,15 +90,15 @@ export function CartProvider({ children }: CartProviderProps) {
 
   function removeFromCart(productId: number) {
     setCartItems((currentItems) =>
-      currentItems.filter((item) => item.id !== productId)
+      currentItems.filter((item) => item.id !== productId),
     );
   }
 
   function increaseQuantity(productId: number) {
     setCartItems((currentItems) =>
       currentItems.map((item) =>
-        item.id === productId ? increaseItemQuantity(item) : item
-      )
+        item.id === productId ? increaseItemQuantity(item) : item,
+      ),
     );
   }
 
@@ -113,9 +111,9 @@ export function CartProvider({ children }: CartProviderProps) {
                 ...item,
                 quantity: item.quantity - 1,
               }
-            : item
+            : item,
         )
-        .filter((item) => item.quantity > 0)
+        .filter((item) => item.quantity > 0),
     );
   }
 
@@ -125,12 +123,12 @@ export function CartProvider({ children }: CartProviderProps) {
 
   const totalItems = cartItems.reduce(
     (total, item) => total + item.quantity,
-    0
+    0,
   );
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
-    0
+    0,
   );
 
   return (

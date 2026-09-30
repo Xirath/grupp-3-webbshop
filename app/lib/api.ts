@@ -1,7 +1,7 @@
 import type { Category, Product, ProductsResponse } from "@/app/types";
 
 const API_URL = "http://localhost:4000";
-const DEFAULT_LIMIT = "6";
+const DEFAULT_LIMIT = "12";
 
 export interface ProductFilterParams {
   page?: number;
