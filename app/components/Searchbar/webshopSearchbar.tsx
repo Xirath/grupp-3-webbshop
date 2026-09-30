@@ -43,6 +43,12 @@ export default function SearchBar({ categories }: SearchBarProps) {
     });
   };
 
+  const clearFilters = () => {  
+  setSelectedCategory("");
+  setSearchTerm("");
+   router.replace(pathname, { scroll: false });
+  }
+
   return (
     <div className="page-container">
       <div
@@ -55,7 +61,7 @@ export default function SearchBar({ categories }: SearchBarProps) {
 
         <input
           id="product-search"
-          type="text"
+          type="search"
           placeholder="Search products..."
           value={searchTerm}
           onChange={(event) => setSearchTerm(event.target.value)}
@@ -80,6 +86,9 @@ export default function SearchBar({ categories }: SearchBarProps) {
             </option>
           ))}
         </select>
+        <button type="button" onClick={clearFilters} className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-400">
+          x
+        </button>
 
         <button
           type="button"
