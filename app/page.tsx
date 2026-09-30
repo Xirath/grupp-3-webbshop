@@ -12,8 +12,8 @@ interface HomeProps {
   searchParams: Promise<{
     page?: string;
     categoryId?: string;
-    stock?: string;
-    search?: string;
+    stock?: string; 
+    search?: string; 
   }>;
 }
 

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { deleteProduct } from "@/app/actions/productActions";
 import { productTableColumns } from "./productTableColumns";
 import { getStockStatus, normalizeStock } from "./productUtils";
+import { useCart } from "./ShoppingCart/CartContent";
 
 interface ProductRowProps {
   product: Product;
@@ -15,9 +16,10 @@ const tdBase =
   "border-b border-[#e5e5e5] px-3.5 py-2.5 align-middle text-sm text-[#111111] max-md:px-2.5 max-md:py-3";
 
 export default function ProductRow({ product }: ProductRowProps) {
+  const { addToCart } = useCart();
+
   const stock = normalizeStock(product.stock);
   const stockStatus = getStockStatus(stock);
-  // ...existing code...
 
   const stockClassName =
     stockStatus.status === "out-of-stock"
@@ -25,7 +27,6 @@ export default function ProductRow({ product }: ProductRowProps) {
       : stockStatus.status === "low-stock"
         ? "text-orange-700"
         : "text-green-800";
-
 
   return (
     <tr className="hover:bg-[#fafafa]">
@@ -71,14 +72,11 @@ export default function ProductRow({ product }: ProductRowProps) {
         {product.category?.name ?? "Uncategorized"}
       </td>
 
-
       {/* Stock */}
       <td
         className={`${tdBase} ${productTableColumns.stock} whitespace-nowrap`}
       >
-        <span className={stockClassName}>
-          {stockStatus.label}
-        </span>{" "}
+        <span className={stockClassName}>{stockStatus.label}</span>{" "}
         <span className="text-black">({stock})</span>
       </td>
 
@@ -94,6 +92,18 @@ export default function ProductRow({ product }: ProductRowProps) {
         className={`${tdBase} ${productTableColumns.actions} whitespace-nowrap`}
       >
         <div className="flex items-center gap-3 max-md:justify-end max-md:gap-1">
+
+          {/* Add to cart */}
+          <button
+            type="button"
+            onClick={() => addToCart(product)}
+            disabled={stock <= 0}
+            className="rounded-md bg-black px-3 py-2 text-xs font-semibold text-white transition hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label={`Add ${product.title} to cart`}
+          >
+            🛒 Add to cart
+          </button>
+
           {/* Delete */}
           <form
             action={deleteProduct.bind(null, product.id)}
