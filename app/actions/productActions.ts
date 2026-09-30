@@ -8,6 +8,7 @@ export async function addProduct(prevState: any, formData: FormData) {
   const result = await addProductRequest(prevState, formData);
 
   revalidatePath("/product/add");
+  updateTag("products");
 
   return result;
 }
