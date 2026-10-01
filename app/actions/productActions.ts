@@ -4,6 +4,12 @@ import { revalidatePath, updateTag } from "next/cache";
 import { deleteProduct as deleteProductRequest } from "@/app/lib/api";
 import { addProduct as addProductRequest } from "@/app/lib/api";
 
+export interface ProductFormState {
+  success: boolean;
+  createdId?: number;
+  error?: string | null;
+}
+
 const isValidUrl = (url: string) => {
   try {
     new URL(url);
@@ -13,7 +19,10 @@ const isValidUrl = (url: string) => {
   }
 };
 
-export async function addProduct(prevState: any, formData: FormData) {
+export async function addProduct(
+  prevState: ProductFormState | null,
+  formData: FormData,
+) {
   try {
     const title = (formData.get("title") as string)?.trim();
     if (!title) {
@@ -64,8 +73,10 @@ export async function addProduct(prevState: any, formData: FormData) {
 
     const newProduct = await addProductRequest(payload);
     return { success: true, createdId: newProduct.id, error: null };
-  } catch (err: any) {
-    return { success: false, error: err.message || "Something went wrong" };
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Something went wrong";
+    return { success: false, error: errorMessage };
   } finally {
     revalidatePath("/product/add");
     updateTag("products");

@@ -4,6 +4,7 @@ import { useActionState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { addProduct } from "@/app/actions/productActions";
 
+import type { ProductFormState } from "@/app/actions/productActions";
 interface Category {
   id: number;
   name: string;
@@ -27,7 +28,7 @@ export default function AddProductForm({
   const [isPending, startTransition] = useTransition();
 
   const [state, formAction] = useActionState(
-    async (prevState: any, formData: FormData) => {
+    async (prevState: ProductFormState | null, formData: FormData) => {
       const res = await addProduct(prevState, formData);
       if (res.success) {
         formRef.current?.reset(); // Form fields clear karne ke liye

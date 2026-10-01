@@ -33,13 +33,13 @@ export async function getNextId() {
     const res = await fetch(`${API_URL}/products`, { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
-      const list = Array.isArray(data)
+      const list: Product[] = Array.isArray(data)
         ? data
         : data.products || data.data || [];
       if (list.length > 0) {
         const ids = list
-          .map((p: any) => parseInt(String(p.id), 10))
-          .filter((id: number) => !isNaN(id));
+          .map((p) => Number(p.id))
+          .filter((id) => !Number.isNaN(id));
         return ids.length > 0 ? Math.max(...ids) + 1 : 1;
       }
     }

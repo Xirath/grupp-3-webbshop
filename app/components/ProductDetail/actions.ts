@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { updateProductStock } from "@/app/lib/api";
 import { stockSchema } from "@/app/lib/validation";
 
