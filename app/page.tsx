@@ -57,7 +57,7 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <main>
       <WebshopHeader/>
-      <WebshopSearchbar categories={categoriesData} />
+      <WebshopSearchbar categories={categories} />
       <ProductGrid
         products={products}
         currentPage={page}
