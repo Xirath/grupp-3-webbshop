@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { Category, Product } from "@/app/types";
 import { updateProductAction, type ProductEditState } from "./actions";
@@ -34,6 +35,9 @@ export default function ProductEditForm({
   product,
   categories,
 }: ProductEditFormProps) {
+  const searchParams = useSearchParams();
+  const returnToURL = searchParams.get("returnTo");
+
   const [state, formAction, isPending] = useActionState(
     updateProductAction.bind(null, product.id),
     initialState(product),
@@ -191,7 +195,7 @@ export default function ProductEditForm({
       </div>
       <div className="flex gap-3">
         <Link
-          href={`/product/${product.id}`}
+          href={returnToURL ?? `/product/${product.id}`}
           className="flex-1 rounded-lg border border-slate-300 px-5 py-3 text-center text-sm font-semibold text-slate-700"
         >
           Cancel
