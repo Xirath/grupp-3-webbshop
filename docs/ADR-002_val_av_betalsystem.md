@@ -1,8 +1,8 @@
 # ADR-02: Selection of Payment Solution (Stripe Embedded Checkout)
 
-- **Status:** Suggestion
+- **Status:** Proposed
 - **Date:** 2026-10-04
-- **Participants:** Daniel
+- **Participants:** Daniel , Luisa , Isabelle, Sandra
 - **Related Issue/Ticket:** #27
 
 ---
