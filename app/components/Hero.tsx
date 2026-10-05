@@ -8,7 +8,7 @@ export default function Hero() {
                 <h1 className="text-5xl font-display text-pretty text-black-300/80 mb-6">A new luxurious collection that's here to stay</h1>
                 <Image src="https://cdn.dummyjson.com/product-images/womens-watches/watch-gold-for-women/2.webp" alt="Luxurious Watch" width={300} height={300} />
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <a className="uppercase bg-blue-950 rounded-lg px-6 py-2 font-bold text-violet-300 hover:bg-blue-950/30" href="/about">Buy now</a>
+                    <a className="uppercase bg-blue-950 rounded-lg px-6 py-2 font-bold text-violet-300 hover:bg-blue-950/30" href="/product/webshop/193">Buy now</a>
                     <a className="uppercase px-6 py-2 rounded-lg border-white border-2 font-bold text-blue-950" href="/something">Sign up</a>
                 </div>
             </header>
