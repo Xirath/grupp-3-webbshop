@@ -10,6 +10,7 @@ import { getStockStatus, normalizeStock } from "./productUtils";
 
 interface ProductRowProps {
   product: Product;
+  returnTo: string;
 }
 
 const tdBase =
@@ -17,7 +18,6 @@ const tdBase =
 
 export default function ProductRow({ product }: ProductRowProps) {
  
-
   const stock = normalizeStock(product.stock);
   const stockStatus = getStockStatus(stock);
 
@@ -92,9 +92,7 @@ export default function ProductRow({ product }: ProductRowProps) {
         className={`${tdBase} ${productTableColumns.actions} whitespace-nowrap`}
       >
         <div className="flex items-center gap-3 max-md:justify-end max-md:gap-1">
-
-          
-
+        
           {/* Delete */}
           <form
             action={deleteProduct.bind(null, product.id)}
@@ -128,7 +126,7 @@ export default function ProductRow({ product }: ProductRowProps) {
 
           {/* Edit */}
           <Link
-            href={`/product/edit/${product.id}`}
+            href={`/product/edit/${product.id}?returnTo=${returnTo}`}
             className="grid h-7 w-7 cursor-pointer place-items-center border-0 bg-transparent text-[#111111] transition hover:text-violet-700 max-md:h-6.5 max-md:w-6.5"
             aria-label={`Edit ${product.title}`}
           >

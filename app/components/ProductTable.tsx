@@ -5,6 +5,7 @@ import { productTableColumns } from "./productTableColumns";
 
 interface ProductTableProps {
   products: Product[];
+  returnTo: string;
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -16,6 +17,7 @@ const thBase =
 
 export default function ProductTable({
   products,
+  returnTo,
   currentPage,
   totalPages,
   totalItems,
@@ -66,7 +68,11 @@ export default function ProductTable({
           <tbody>
             {products.length > 0 ? (
               products.map((product) => (
-                <ProductRow key={product.id} product={product} />
+                <ProductRow
+                  key={product.id}
+                  product={product}
+                  returnTo={returnTo}
+                />
               ))
             ) : (
               <tr>
