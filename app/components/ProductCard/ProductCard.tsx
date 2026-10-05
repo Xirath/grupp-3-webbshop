@@ -22,7 +22,7 @@ export default async function ProductCard({
 
   return (
     <Link
-      href={`/product/${product.id}`}
+     href={`/product/webshop/${product.id}`}
       className="block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2"
     >
       <article className="relative flex h-full flex-col gap-2 rounded-lg bg-gray-200 transition hover:-translate-y-0.5 hover:shadow-md">
