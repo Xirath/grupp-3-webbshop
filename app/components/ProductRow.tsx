@@ -7,7 +7,6 @@ import { deleteProduct } from "@/app/actions/productActions";
 import { productTableColumns } from "./productTableColumns";
 import { getStockStatus, normalizeStock } from "./productUtils";
 
-
 interface ProductRowProps {
   product: Product;
   returnTo: string;
@@ -16,8 +15,7 @@ interface ProductRowProps {
 const tdBase =
   "border-b border-[#e5e5e5] px-3.5 py-2.5 align-middle text-sm text-[#111111] max-md:px-2.5 max-md:py-3";
 
-export default function ProductRow({ product }: ProductRowProps) {
- 
+export default function ProductRow({ product, returnTo }: ProductRowProps) {
   const stock = normalizeStock(product.stock);
   const stockStatus = getStockStatus(stock);
 
@@ -92,7 +90,6 @@ export default function ProductRow({ product }: ProductRowProps) {
         className={`${tdBase} ${productTableColumns.actions} whitespace-nowrap`}
       >
         <div className="flex items-center gap-3 max-md:justify-end max-md:gap-1">
-        
           {/* Delete */}
           <form
             action={deleteProduct.bind(null, product.id)}
