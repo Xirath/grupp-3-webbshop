@@ -1,8 +1,14 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { deleteProduct as deleteProductRequest } from "@/app/lib/api";
+import { addProduct as addProductRequest } from "@/app/lib/api";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+export interface ProductFormState {
+  success: boolean;
+  createdId?: number;
+  error?: string | null;
+}
 
 const isValidUrl = (url: string) => {
   try {
@@ -13,7 +19,10 @@ const isValidUrl = (url: string) => {
   }
 };
 
-export async function addProduct(prevState: any, formData: FormData) {
+export async function addProduct(
+  prevState: ProductFormState | null,
+  formData: FormData,
+) {
   try {
     const title = (formData.get("title") as string)?.trim();
     if (!title) {
@@ -41,7 +50,8 @@ export async function addProduct(prevState: any, formData: FormData) {
       sku: (formData.get("sku") as string)?.trim() || `SKU-${Date.now()}`,
       rating: parseFloat(formData.get("rating") as string) || 0,
       tags: parsedTags.length > 0 ? parsedTags : ["beauty"],
-      warrantyInformation: (formData.get("warrantyInfo") as string) || "1 week warranty",
+      warrantyInformation:
+        (formData.get("warrantyInfo") as string) || "1 week warranty",
       categoryId: parseInt(formData.get("categoryId") as string, 10) || 1,
       description: "New product description",
       discountPercentage: 0,
@@ -61,25 +71,15 @@ export async function addProduct(prevState: any, formData: FormData) {
       thumbnail: validImageUrl,
     };
 
-    const response = await fetch(`${API_BASE_URL}/products`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return { success: false, error: `HTTP ${response.status}: ${errorText}` };
-    }
-
-    const createdProduct = await response.json();
-
-    // Cache clear/refresh karne ke liye taake new ID update ho jaye
+    const newProduct = await addProductRequest(payload);
+    return { success: true, createdId: newProduct.id, error: null };
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Something went wrong";
+    return { success: false, error: errorMessage };
+  } finally {
     revalidatePath("/product/add");
-
-    return { success: true, createdId: createdProduct.id, error: null };
-  } catch (err: any) {
-    return { success: false, error: err.message || "Something went wrong" };
+    updateTag("products");
   }
 }
 
@@ -88,13 +88,11 @@ export async function deleteProduct(productId: number) {
     throw new Error("Invalid product ID");
   }
 
-  const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-    method: "DELETE",
-  });
+  const response = await deleteProductRequest(productId);
 
   if (!response.ok) {
     throw new Error(`Unable to delete product ${productId}`);
   }
 
-  revalidatePath("/");
+  updateTag("products");
 }

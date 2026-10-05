@@ -6,18 +6,16 @@ import Image from "next/image";
 import { deleteProduct } from "@/app/actions/productActions";
 import { productTableColumns } from "./productTableColumns";
 import { getStockStatus, normalizeStock } from "./productUtils";
-import { useCart } from "./ShoppingCart/CartContent";
 
 interface ProductRowProps {
   product: Product;
+  returnTo: string;
 }
 
 const tdBase =
   "border-b border-[#e5e5e5] px-3.5 py-2.5 align-middle text-sm text-[#111111] max-md:px-2.5 max-md:py-3";
 
-export default function ProductRow({ product }: ProductRowProps) {
-  const { addToCart } = useCart();
-
+export default function ProductRow({ product, returnTo }: ProductRowProps) {
   const stock = normalizeStock(product.stock);
   const stockStatus = getStockStatus(stock);
 
@@ -92,18 +90,6 @@ export default function ProductRow({ product }: ProductRowProps) {
         className={`${tdBase} ${productTableColumns.actions} whitespace-nowrap`}
       >
         <div className="flex items-center gap-3 max-md:justify-end max-md:gap-1">
-
-          {/* Add to cart */}
-          <button
-            type="button"
-            onClick={() => addToCart(product)}
-            disabled={stock <= 0}
-            className="rounded-md bg-black px-3 py-2 text-xs font-semibold text-white transition hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label={`Add ${product.title} to cart`}
-          >
-            🛒 Add to cart
-          </button>
-
           {/* Delete */}
           <form
             action={deleteProduct.bind(null, product.id)}
@@ -137,7 +123,7 @@ export default function ProductRow({ product }: ProductRowProps) {
 
           {/* Edit */}
           <Link
-            href={`/product/edit/${product.id}`}
+            href={`/product/edit/${product.id}?returnTo=${returnTo}`}
             className="grid h-7 w-7 cursor-pointer place-items-center border-0 bg-transparent text-[#111111] transition hover:text-violet-700 max-md:h-6.5 max-md:w-6.5"
             aria-label={`Edit ${product.title}`}
           >
