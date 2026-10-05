@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Filter } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { Category } from "../types";
+import type { Category } from "../../types";
 
 interface SearchBarProps {
   categories: Category[];

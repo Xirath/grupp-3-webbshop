@@ -1,5 +1,6 @@
 import ProductGrid from "./components/ProductGrid/ProductGrid";
 import WebshopHeader from "./components/Header/webshopHeader";
+import WebshopSearchbar from "./components/Searchbar/WebshopSearchBar";
 import { AdaptivePagination } from "./components/Pagination/AdaptivePagination";
 import { redirect } from "next/navigation";
 import {
@@ -54,8 +55,9 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   return (
-    <main className="flex-1 flex flex-col justify-between max-w-7xl mx-auto mb-4 w-full">
-      <WebshopHeader />
+    <main>
+      <WebshopHeader/>
+      <WebshopSearchbar categories={categories} />
       <ProductGrid
         products={products}
         currentPage={page}

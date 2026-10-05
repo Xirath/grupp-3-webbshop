@@ -4,7 +4,7 @@ import {
 } from "../lib/validation";
 import Header from "../components/Header/Header";
 import SummaryCards from "../components/Summary-card/SummaryCard";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/Searchbar/SearchBar";
 import ProductTable from "../components/ProductTable";
 import { getCategories, getProducts, getProductStock } from "../lib/api";
 import { redirect } from "next/navigation";
