@@ -12,7 +12,7 @@ export default function WebshopHeader() {
 
   return (
     <>
-      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-blue-950/70 p-4 border-b-2 border-gray-300/50  ">
+      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-violet-300/70 p-4 border-b-2 border-gray-300/50  ">
         <Link
           href="/"
           className="flex items-center gap-2 font-semibold text-2xl"
