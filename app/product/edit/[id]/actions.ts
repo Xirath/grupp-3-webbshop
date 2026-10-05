@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { updateProduct } from "@/app/lib/api";
 import { productSchema } from "@/app/lib/validation";
@@ -85,8 +85,6 @@ export async function updateProductAction(
     };
   }
 
-  revalidatePath("/");
-  revalidatePath(`/product/${productId}`);
-  revalidatePath(`/product/edit/${productId}`);
+  updateTag("products");
   redirect(`/product/${productId}`);
 }

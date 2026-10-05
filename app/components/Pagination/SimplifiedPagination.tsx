@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useTransition } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -23,14 +23,6 @@ export const SimplifiedPagination: React.FC<PaginationProps> = ({
 
   const safeTotalPages = Math.max(totalPages, 1);
   const safeCurrentPage = Math.min(Math.max(currentPage, 1), safeTotalPages);
-
-  // Local state for the jump-to input
-  const [inputVal, setInputVal] = useState(String(safeCurrentPage));
-
-  // Keep input synced if the page changes via URL or back/forward buttons
-  useEffect(() => {
-    setInputVal(String(safeCurrentPage));
-  }, [safeCurrentPage]);
 
   if (totalPages <= 1) return null;
 
@@ -55,14 +47,12 @@ export const SimplifiedPagination: React.FC<PaginationProps> = ({
   };
 
   const handleJumpAction = (formData: FormData) => {
-    const rawValue = formData.get("page")?.toString().trim() ?? inputVal;
+    const rawValue =
+      formData.get("page")?.toString().trim() ?? String(safeCurrentPage);
     const targetPage = Number(rawValue);
 
     if (!isNaN(targetPage) && targetPage >= 1 && targetPage <= safeTotalPages) {
       changePage(targetPage);
-    } else {
-      // Reset input if invalid
-      setInputVal(String(safeCurrentPage));
     }
   };
 
@@ -83,7 +73,6 @@ export const SimplifiedPagination: React.FC<PaginationProps> = ({
           <ChevronLeft size={18} />
         </button>
 
-        {/* Jump-to Form (React 19 Action) */}
         <form
           action={handleJumpAction}
           className="flex items-center gap-2 text-sm text-gray-700"
@@ -93,20 +82,20 @@ export const SimplifiedPagination: React.FC<PaginationProps> = ({
           </label>
           <span>Page</span>
           <input
+            key={safeCurrentPage}
             id="jump-to-page"
             name="page"
             type="number"
             min={1}
             max={safeTotalPages}
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
+            defaultValue={safeCurrentPage}
             disabled={isPending}
             className="w-16 h-9 px-2 text-center border rounded-md font-medium tabular-nums focus:outline-none focus:ring-2 focus:ring-gray-800 disabled:opacity-50"
           />
           <span>of {safeTotalPages.toLocaleString()}</span>
           <button
             type="submit"
-            disabled={isPending || Number(inputVal) === safeCurrentPage}
+            disabled={isPending}
             className="h-9 px-3 text-xs font-semibold uppercase tracking-wider rounded-md border hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
             Go
