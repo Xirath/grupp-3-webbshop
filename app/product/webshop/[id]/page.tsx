@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import ProductDetail from "@/app/components/ProductDetail/ProductDetail";
 import { getProduct } from "@/app/lib/api";
 import WebShopProductDetail from "@/app/components/ProductDetail/WebShopProductDetail/WebShopProductDetail";
 import WebshopHeader from "@/app/components/Header/webshopHeader";

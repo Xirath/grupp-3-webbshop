@@ -1,6 +1,6 @@
 import ProductGrid from "./components/ProductGrid/ProductGrid";
 import WebshopHeader from "./components/Header/webshopHeader";
-import WebshopSearchbar from "./components/Searchbar/WebshopSearchBar";
+import WebshopSearchbar from "./components/Searchbar/WebshopSearchbar";
 import { AdaptivePagination } from "./components/Pagination/AdaptivePagination";
 import { redirect } from "next/navigation";
 import {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Cuboid, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "../ShoppingCart/CartContent";
