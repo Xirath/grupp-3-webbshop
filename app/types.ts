@@ -53,3 +53,7 @@ export interface ProductsResponse {
   page: number;
   pages: number;
 }
+
+export interface CartItem extends Product {
+  quantity: number;
+}
