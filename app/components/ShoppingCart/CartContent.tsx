@@ -132,6 +132,7 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   function clearCart() {
+    localStorage.removeItem("shopping-cart");
     setCartItems([]);
   }
 

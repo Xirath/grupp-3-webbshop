@@ -10,6 +10,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { fetchClientSecret } from "../actions/stripe";
 import { useCart } from "../components/ShoppingCart/CartContent";
 import Link from "next/link";
+import WebshopHeader from "../components/Header/webshopHeader";
 
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
   throw new Error(
@@ -43,37 +44,46 @@ export default function CheckoutPage() {
 
   if (cartItems.length === 0) {
     return (
-      <main>
-        <p>Cart is empty, insert nice message here</p>
-        <Link href="/" className="rounded bg-blue-500 text-white px-4 py-2">
-          Return to shop
-        </Link>
-      </main>
+      <>
+        <WebshopHeader />
+        <main>
+          <p>Cart is empty, insert nice message here</p>
+          <Link href="/" className="rounded bg-blue-500 text-white px-4 py-2">
+            Return to shop
+          </Link>
+        </main>
+      </>
     );
   }
 
   if (errorMessage) {
     return (
-      <main>
-        <h2>Checkout Error</h2>
-        <p>{errorMessage}</p>
-        {/* TODO: Link to the shopping cart page */}
-        <Link href="/" className="rounded bg-blue-500 text-white px-4 py-2">
-          Review Cart
-        </Link>
-      </main>
+      <>
+        <WebshopHeader />
+        <main>
+          <h2>Checkout Error</h2>
+          <p>{errorMessage}</p>
+          {/* TODO: Link to the shopping cart page */}
+          <Link href="/" className="rounded bg-blue-500 text-white px-4 py-2">
+            Review Cart
+          </Link>
+        </main>
+      </>
     );
   }
 
   return (
-    <div id="checkout">
-      <EmbeddedCheckoutProvider
-        key={cartKey}
-        stripe={stripePromise}
-        options={{ fetchClientSecret: handleFetchClientSecret }}
-      >
-        <EmbeddedCheckout />
-      </EmbeddedCheckoutProvider>
-    </div>
+    <>
+      <WebshopHeader />
+      <div id="checkout">
+        <EmbeddedCheckoutProvider
+          key={cartKey}
+          stripe={stripePromise}
+          options={{ fetchClientSecret: handleFetchClientSecret }}
+        >
+          <EmbeddedCheckout />
+        </EmbeddedCheckoutProvider>
+      </div>
+    </>
   );
 }
