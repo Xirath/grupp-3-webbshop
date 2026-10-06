@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe --all-snapshot",
     "mock-server": "json-server --watch server/products.json --middlewares server/middleware.js --port 4000",
     "dev:full": "concurrently \"npm run dev\" \"npm run mock-server\"",
     "build": "next build",
@@ -25,6 +26,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@stripe/cli": "^1.53.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
