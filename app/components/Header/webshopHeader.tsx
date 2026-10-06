@@ -1,10 +1,11 @@
 "use client";
 
-import { Cuboid, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "../ShoppingCart/CartContent";
 import ShoppingCart from "../ShoppingCart/ShoppingCart";
+import Image from "next/image";
 
 export default function WebshopHeader() {
   const { totalItems } = useCart();
@@ -12,13 +13,12 @@ export default function WebshopHeader() {
 
   return (
     <>
-      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between p-4 border-b-2 border-gray-300/50 mb-3 mx-6">
+      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-gray-200 p-4 border-b-2 border-gray-300/50  ">
         <Link
           href="/"
           className="flex items-center gap-2 font-semibold text-2xl"
         >
-          <Cuboid size={48} />
-          <p>BuyIT</p>
+          <Image src="/buyit.jpg" alt="Logo" width={80} height={80} />
         </Link>
         <p className="text-m font-semibold text-gray-700">
           Welcome to our webshop! Explore our products and enjoy a seamless
