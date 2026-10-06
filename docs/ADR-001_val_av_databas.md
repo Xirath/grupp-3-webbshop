@@ -9,36 +9,43 @@
 
 ## 1. Kontext & Problemställning
 
-_Vilken utmaning eller vilket behov står vi inför? Vilka krav och begränsningar styr oss?_
+_I den nuvarande versionen av projektet används en db.json-fil tillsammans med JSON Server som backend och datakälla. JSON Server tillhandahåller ett enkelt REST API ovanpå JSON-filen, vilket har gjort det möjligt att snabbt utveckla och testa frontend-applikationen.
 
-_Exempel: Vi behöver hantera kundens varukorg i webbshoppen. Korgen ska kunna uppdateras från flera olika komponenter (produktsida, navbar-ikon, kassa) och användarens varor ska helst inte försvinna vid en sidomladdning. Vi måste bestämma hur vi hanterar detta tillstånd i Next.js App Router._
+Den nuvarande lösningen fungerar bra för prototypning, men har begränsningar när projektet utvecklas och behöver hantera mer strukturerad och relationsbaserad data. En JSON-fil ger exempelvis inte samma stöd för relationer, dataintegritet och komplexa frågor som en relationsdatabas.
 
----
+Vi har valt PostgreSQL som databas, där databasen hostas av Supabase och Prisma som ORM mellan Next.js-applikationen och databasen.
+
+Viktiga krav är att lösningen ska:
+
+- Fungera bra tillsammans med Next.js.
+- Göra det enkelt att skapa, läsa, uppdatera och ta bort data.
+- Ge möjlighet att utveckla och förändra datamodellen på ett strukturerat sätt.
+- Vara tillräckligt robust för projektets fortsatta utveckling.
 
 ## 2. Övervägda Alternativ
 
-### Alternativ A: [t.ex. React Context API med LocalStorage]
+### Alternativ A: Fortsätta med JSON Server och db.json
 
-- **Fördelar:** Inbyggt i React, inga externa beroenden, enkelt att komma igång med.
-- **Nackdelar:** Kan orsaka onödiga omrenderingar vid frekventa uppdateringar, kräver manuell hantering av SSR/hydration mismatch vid synk mot LocalStorage.
+- **Fördelar:** Enkel lösning som redan används i projektet. Kräver lite konfiguration. Enkelt att läsa och ändra data direkt i db.json. Passar bra för prototyper och tidig frontend-utveckling.
+- **Nackdelar:** Begränsade möjligheter att hantera relationer mellan data. Mindre lämpligt när applikationen blir mer komplex.
 
-### Alternativ B: [t.ex. Zustand med persist-middleware]
+### Alternativ B: Supabase(PostgreSQL) med Prisma
 
-- **Fördelar:** Lättviktigt (under 2kB), mycket snabbt, friktionsfri selector-modell som minimerar omrenderingar, inbyggt stöd för att persistera till LocalStorage eller Cookies.
-- **Nackdelar:** Ett extra npm-paket att underhålla och lära sig.
+- **Fördelar:** PostgreSQL är en etablerad relationsdatabas med stöd för relationer och dataintegritet. Prisma gör det enklare att arbeta med databasen från TypeScript/Next.js. Prisma ger ett typat API för att kommunicera med databasen. Datamodellen kan definieras tydligt genom Prisma-schema. Prisma Migrate kan användas för att hantera förändringar i databasschemat. Lösningen är mer skalbar och produktionslik än db.json och JSON Server. Teamet får erfarenhet av en vanlig teknikstack för moderna webbapplikationer.
 
-### Alternativ C: [t.ex. Server State med Cookies och Server Actions]
-
-- **Fördelar:** Fungerar sömlöst med Server Components och kräver minimal JavaScript på klienten.
-- **Nackdelar:** Mer komplext att implementera för snabba UI-uppdateringar utan fördröjning om inte optimistiska uppdateringar används.
+- **Nackdelar:** Mer komplex att sätta upp än JSON Server. Teamet behöver lära sig Prisma och grundläggande databashantering. Databasmigrationer behöver hanteras när datamodellen förändras.
 
 ---
 
 ## 3. Beslut
 
-_Vilket alternativ valde vi och varför?_
+Vi beslutar att ersätta den nuvarande db.json + JSON Server-lösningen med Supabase(PostgreSQL) och Prisma.
 
-_Exempel: Vi beslutar att använda **Alternativ B: Zustand med persist-middleware**. Detta ger oss ett flexibelt, globalt state som fungerar smidigt i våra Client Components, samtidigt som vi undviker boilerplate och får persistent varukorg "out of the box"._
+PostgreSQL används som den faktiska databasen, där databasen hostas av Supabase och Prisma används som ORM för kommunikationen mellan Next.js-applikationen och databasen.
+
+Beslutet grundar sig främst i att PostgreSQL ger bättre stöd för relationsbaserad och persistent data än den nuvarande JSON-filen. Prisma kompletterar detta genom att ge ett typat och strukturerat sätt att arbeta med databasen från vår TypeScript-kod.
+
+Den nuvarande db.json-filen och JSON Server kommer därför inte längre att vara den primära datakällan när migreringen är genomförd.
 
 ---
 
@@ -46,24 +53,31 @@ _Exempel: Vi beslutar att använda **Alternativ B: Zustand med persist-middlewar
 
 ### Positiva konsekvenser
 
-- Teamet får en standardiserad metod för globalt state som kan återanvändas för eventuella andra funktioner (t.ex. notifikationer/toast).
-- Kunden får en modern köpupplevelse där korgen sparas mellan sessioner.
-- Enkelt att testa och mocka.
+- db.json behöver inte längre användas som permanent datalagring.
+- Vi får en riktig relationsdatabas med stöd för relationer och dataintegritet.
+- Lösningen blir mer produktionslik och kan enklare byggas ut i framtiden.
+- Teamet får erfarenhet av PostgreSQL, Prisma och relationsdatabaser.
 
 ### Negativa konsekvenser / Risker
 
-- Vi måste säkerställa att vi hanterar Hydration i Next.js så att vi inte renderar korgens innehåll innan klienten mountat (för att undvika hydration warnings).
-- Alla i gruppen måste förstå hur Zustands `useStore`-hook fungerar så att inte enbart en person kan arbeta med varukorgen.
+- Lösningen kräver mer konfiguration än JSON Server.
+- Teamet behöver förstå både Prisma och grundläggande relationsdatabaser.
+- Migreringen från db.json till PostgreSQL behöver genomföras korrekt så att befintlig data och datamodell inte går förlorad.
+
 
 ---
 
 ## 5. Hur vi verifierar beslutet
 
-_Hur vet vi att beslutet var lyckat?_
+- [] Next.js-applikationen kan ansluta till PostgreSQL via Prisma.
+- [] Den tidigare datan från db.json har migrerats till PostgreSQL där det är relevant.
+- [] Applikationen kan skapa, läsa, uppdatera och ta bort data via Prisma.
+- [] Relationer mellan relevanta datamodeller fungerar korrekt.
+- [] Data finns kvar efter att applikationen eller utvecklingsservern startas om.
+- [] De viktigaste funktionerna som tidigare använde JSON Server fungerar utan db.json och JSON Server.
+- [] Databasschemat kan uppdateras med Prisma Migrate på ett kontrollerat sätt.
 
-- [ ] Varor kan läggas till och tas bort från både produktsida och kassa.
-- [ ] Antalet varor i navbar-badgen uppdateras omedelbart utan sidomladdning.
-- [ ] Varukorgens innehåll finns kvar efter att sidan laddats om (`F5`).
-- [ ] Inga Hydration-varningar syns i webbläsarkonsolen.
+Förväntat slutresultat:
+db.json + JSON Server ersätts som backend/databaskälla av PostgreSQL + Prisma, medan Next.js fortsatt används som applikationens ramverk.
 
 ---
