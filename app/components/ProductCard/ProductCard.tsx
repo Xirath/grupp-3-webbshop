@@ -1,72 +1,94 @@
-import { Product } from "@/app/types";
+import Link from "next/link";
 import { Suspense } from "react";
 import { Star } from "lucide-react";
+
+import type { Product } from "@/app/types";
 import ProductImage from "./ProductImage";
 import DiscountTag from "./DiscountTag";
-import { getDiscountedPrice, formatPrice } from "../productUtils";
+import { formatPrice, getDiscountedPrice } from "../productUtils";
 
 function isDiscounted(product: Product): boolean {
-  return product?.discountPercentage && product.discountPercentage > 0
-    ? true
-    : false;
+  return Boolean(
+    product.discountPercentage && product.discountPercentage > 0,
+  );
 }
 
-export default async function ProductCard({ product }: { product: Product }) {
+export default async function ProductCard({
+  product,
+}: {
+  product: Product;
+}) {
   const isDiscountedFlag = isDiscounted(product);
 
   return (
-    <div className="relative flex flex-col gap-2 bg-gray-200 h-full rounded-lg">
-      <div className="relative w-full aspect-square overflow-hidden rounded-t-lg bg-gray-100">
-        <Suspense
-          fallback={<div className="w-full h-full bg-gray-200 animate-pulse" />}
-        >
-          <ProductImage
-            src={product?.images[0] ?? ""}
-            alt={product?.title ?? "Unnamed Product"}
-          />
-        </Suspense>
-      </div>
-      <div className="flex flex-col flex-1 p-2">
+    <Link
+     href={`/product/webshop/${product.id}`}
+      className="block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2"
+    >
+      <article className="relative flex h-full flex-col gap-2 rounded-lg bg-gray-200 transition hover:-translate-y-0.5 hover:shadow-md">
+        <div className="relative aspect-square w-full overflow-hidden rounded-t-lg bg-gray-100">
+          <Suspense
+            fallback={
+              <div className="h-full w-full animate-pulse bg-gray-200" />
+            }
+          >
+            <ProductImage
+              src={product.images?.[0] ?? product.thumbnail ?? ""}
+              alt={product.title ?? "Unnamed Product"}
+            />
+          </Suspense>
+        </div>
+
         <DiscountTag
-          className="absolute top-2 right-2"
+          className="absolute right-2 top-2"
           product={product}
           showPercentage={product.price <= 100}
         />
-        <h2 className="font-semibold text-sm line-clamp-2 h-10">
-          {product?.title ?? "Unnamed Product"}
-        </h2>
-        <p className="text-sm text-gray-700">
-          {" "}
-          {product?.category?.name ?? "Uncategorized"}
-        </p>
 
-        <div className="flex items-end justify-between mt-auto pt-2">
-          <div className="flex items-center gap-1 text-sm">
-            {product.rating && product.rating > 0 ? (
-              <>
-                {product.rating}{" "}
-                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              </>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="flex flex-col items-end leading-none justify-end mt-auto">
-            <p
-              className={`text-sm/none text-zinc-400 text-right line-through font-bold ${!isDiscountedFlag ? "invisible select-none" : ""}`}
-            >
-              {formatPrice(product.price)}
-            </p>
-            <p
-              className={`text-lg/none font-bold text-right mt-0.5 ${isDiscountedFlag ? "text-rose-500" : ""}`}
-            >
-              {formatPrice(
-                getDiscountedPrice(product.price, product.discountPercentage),
-              )}
-            </p>
+        <div className="flex flex-1 flex-col p-2">
+          <h2 className="h-10 line-clamp-2 text-sm font-semibold">
+            {product.title ?? "Unnamed Product"}
+          </h2>
+
+          <p className="text-sm text-gray-700">
+            {product.category?.name ?? "Uncategorized"}
+          </p>
+
+          <div className="mt-auto flex items-end justify-between pt-2">
+            <div className="flex items-center gap-1 text-sm">
+              {product.rating && product.rating > 0 ? (
+                <>
+                  <span>{product.rating}</span>
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                </>
+              ) : null}
+            </div>
+
+            <div className="mt-auto flex flex-col items-end justify-end leading-none">
+              <p
+                className={`text-right text-sm/none font-bold text-zinc-400 line-through ${
+                  !isDiscountedFlag ? "invisible select-none" : ""
+                }`}
+              >
+                {formatPrice(product.price)}
+              </p>
+
+              <p
+                className={`mt-0.5 text-right text-lg/none font-bold ${
+                  isDiscountedFlag ? "text-rose-500" : ""
+                }`}
+              >
+                {formatPrice(
+                  getDiscountedPrice(
+                    product.price,
+                    product.discountPercentage,
+                  ),
+                )}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </article>
+    </Link>
   );
 }
