@@ -1,16 +1,14 @@
 import Link from "next/link";
 import type { Product } from "@/app/types";
-import ProductGallery from "./ProductGallery";
-import ProductInformation from "./ProductInformation";
-import ProductMetadata from "./ProductMetadata";
-import ProductReviews from "./ProductReviews";
-import ProductSummary from "./ProductSummary";
+import ProductGallery from "../ProductGallery";
+import ProductReviews from "../ProductReviews";
+import WebshopProductSummary from "./WebshopProductSummary";
 
 interface ProductDetailProps {
   product: Product;
 }
 
-export default function ProductDetail({ product }: ProductDetailProps) {
+export default function WebShopProductDetail({ product }: ProductDetailProps) {
   const images = [
     ...new Set([product.thumbnail, ...(product.images ?? [])]),
   ].filter(
@@ -38,14 +36,9 @@ export default function ProductDetail({ product }: ProductDetailProps) {
               </h1>
             </div>
             <div className="flex shrink-0 items-center gap-2">
+              
               <Link
-                href={`/product/edit/${product.id}?returnTo=/product/${product.id}`}
-                className="min-h-10 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2"
-              >
-                Edit product
-              </Link>
-              <Link
-                href="/admin"
+                href="/"
                 className="min-h-10 shrink-0 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2"
               >
                 Back to products
@@ -61,11 +54,11 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           >
             <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
               <ProductGallery title={product.title} images={images} />
-              <ProductSummary product={product} />
+              <WebshopProductSummary product={product} />
             </div>
           </section>
 
-          <ProductInformation product={product} />
+          
 
           <section className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
             <SectionHeader title="Description" />
@@ -110,7 +103,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           </section>
 
           <ProductReviews product={product} />
-          <ProductMetadata product={product} />
+         
         </div>
       </div>
     </main>

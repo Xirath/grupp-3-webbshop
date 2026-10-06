@@ -46,6 +46,10 @@ export interface Product {
   thumbnail: string;
 }
 
+// Types for creating and updating products
+export type CreateProductInput = Omit<Product, "id" | "category">;
+export type UpdateProductInput = Partial<CreateProductInput>;
+
 export interface ProductsResponse {
   products: Product[];
   total: number;

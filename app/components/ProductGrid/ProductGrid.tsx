@@ -14,7 +14,6 @@ export default async function ProductGrid({
   currentPage,
   totalPages,
   totalItems,
-  pageSize,
 }: ProductGridProps) {
   return (
     <div className="page-container">
