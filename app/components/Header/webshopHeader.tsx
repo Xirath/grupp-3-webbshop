@@ -18,7 +18,7 @@ export default function WebshopHeader() {
           href="/"
           className="flex items-center gap-2 font-semibold text-2xl"
         >
-          <Image src="/BuyIT-story.jpg" alt="Logo" width={80} height={80} />
+          <Image src="/buyit.jpg" alt="Logo" width={80} height={80} />
         </Link>
         <p className="text-m font-semibold text-gray-700">
           Welcome to our webshop! Explore our products and enjoy a seamless
