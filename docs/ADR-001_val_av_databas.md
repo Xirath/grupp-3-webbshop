@@ -9,7 +9,7 @@
 
 ## 1. Kontext & Problemställning
 
-_I den nuvarande versionen av projektet används en db.json-fil tillsammans med JSON Server som backend och datakälla. JSON Server tillhandahåller ett enkelt REST API ovanpå JSON-filen, vilket har gjort det möjligt att snabbt utveckla och testa frontend-applikationen.
+I den nuvarande versionen av projektet används en db.json-fil tillsammans med JSON Server som backend och datakälla. JSON Server tillhandahåller ett enkelt REST API ovanpå JSON-filen, vilket har gjort det möjligt att snabbt utveckla och testa frontend-applikationen.
 
 Den nuvarande lösningen fungerar bra för prototypning, men har begränsningar när projektet utvecklas och behöver hantera mer strukturerad och relationsbaserad data. En JSON-fil ger exempelvis inte samma stöd för relationer, dataintegritet och komplexa frågor som en relationsdatabas.
 
@@ -69,13 +69,13 @@ Den nuvarande db.json-filen och JSON Server kommer därför inte längre att var
 
 ## 5. Hur vi verifierar beslutet
 
-- [] Next.js-applikationen kan ansluta till PostgreSQL via Prisma.
-- [] Den tidigare datan från db.json har migrerats till PostgreSQL där det är relevant.
-- [] Applikationen kan skapa, läsa, uppdatera och ta bort data via Prisma.
-- [] Relationer mellan relevanta datamodeller fungerar korrekt.
-- [] Data finns kvar efter att applikationen eller utvecklingsservern startas om.
-- [] De viktigaste funktionerna som tidigare använde JSON Server fungerar utan db.json och JSON Server.
-- [] Databasschemat kan uppdateras med Prisma Migrate på ett kontrollerat sätt.
+- [ ] Next.js-applikationen kan ansluta till PostgreSQL via Prisma.
+- [ ] Den tidigare datan från db.json har migrerats till PostgreSQL där det är relevant.
+- [ ] Applikationen kan skapa, läsa, uppdatera och ta bort data via Prisma.
+- [ ] Relationer mellan relevanta datamodeller fungerar korrekt.
+- [ ] Data finns kvar efter att applikationen eller utvecklingsservern startas om.
+- [ ] De viktigaste funktionerna som tidigare använde JSON Server fungerar utan db.json och JSON Server.
+- [ ] Databasschemat kan uppdateras med Prisma Migrate på ett kontrollerat sätt.
 
 Förväntat slutresultat:
 db.json + JSON Server ersätts som backend/databaskälla av PostgreSQL + Prisma, medan Next.js fortsatt används som applikationens ramverk.
