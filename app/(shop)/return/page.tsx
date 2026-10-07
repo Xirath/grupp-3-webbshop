@@ -1,11 +1,10 @@
 import { redirect } from "next/navigation";
 import CartResetHandler from "./CartResetHandler";
 
-import { stripe } from "../lib/stripe";
+import { stripe } from "@lib/stripe";
 import { Stripe } from "stripe";
 import Link from "next/link";
-import { formatPrice } from "../components/productUtils";
-import WebshopHeader from "../components/Header/webshopHeader";
+import { formatPrice } from "@components/productUtils";
 
 export default async function ReturnPage({
   searchParams,
@@ -55,31 +54,27 @@ export default async function ReturnPage({
     if (amount_total === null || amount_total === undefined) {
       // Should not proceed without a verified payment amount
       return (
-        <>
-          <WebshopHeader />
-          <main>
-            <h1>Unable to Verify Order Details</h1>
-            <p className="mt-2 text-sm text-gray-600">
-              We could not confirm the final payment amount with Stripe. If your
-              card was charged, you will receive an email receipt shortly.
-            </p>
-            <div className="mt-6">
-              <Link
-                href="/"
-                className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
-              >
-                Return to Shop
-              </Link>
-            </div>
-          </main>
-        </>
+        <main>
+          <h1>Unable to Verify Order Details</h1>
+          <p className="mt-2 text-sm text-gray-600">
+            We could not confirm the final payment amount with Stripe. If your
+            card was charged, you will receive an email receipt shortly.
+          </p>
+          <div className="mt-6">
+            <Link
+              href="/"
+              className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+            >
+              Return to Shop
+            </Link>
+          </div>
+        </main>
       );
     }
     const amountPaid = formatPrice(amount_total / 100);
     return (
       <>
         <CartResetHandler />
-        <WebshopHeader />
         <section id="success">
           <h2>Thank you for your purchase!</h2>
           <p>
@@ -113,14 +108,11 @@ export default async function ReturnPage({
   // Session for payment has expired
   if (status === "expired") {
     return (
-      <>
-        <WebshopHeader />
-        <main>
-          <h2>Session Expired</h2>
-          <p>Your payment has expired.</p>
-          <Link href="/">Return to shop</Link>
-        </main>
-      </>
+      <main>
+        <h2>Session Expired</h2>
+        <p>Your payment has expired.</p>
+        <Link href="/">Return to shop</Link>
+      </main>
     );
   }
 }

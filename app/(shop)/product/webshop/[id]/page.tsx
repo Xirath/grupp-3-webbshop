@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
-import ProductDetail from "@/app/components/ProductDetail/ProductDetail";
 import { getProduct } from "@/app/lib/api";
 import WebShopProductDetail from "@/app/components/ProductDetail/WebShopProductDetail/WebShopProductDetail";
-import WebshopHeader from "@/app/components/Header/webshopHeader";
+import WebshopHeader from "@/app/components/Header/WebshopHeader";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -22,8 +21,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="page-container">
-       <WebshopHeader />
       <WebShopProductDetail product={product} />
     </div>
-  )
+  );
 }
