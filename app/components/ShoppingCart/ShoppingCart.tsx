@@ -85,7 +85,7 @@ export default function ShoppingCart() {
           </div>
           <Link
             href="/checkout"
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-violet-600 hover:underline"
           >
             Proceed to Checkout
           </Link>
