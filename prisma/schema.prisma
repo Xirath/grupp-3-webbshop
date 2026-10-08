@@ -1,0 +1,75 @@
+
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  
+}
+
+
+model Product{
+  id Int @id @default(autoincrement())
+  name String @unique
+  description String?
+  price Float
+  stock Int
+  categoryId Int 
+  reviews Reviews[]
+  
+  discountPercentage Float?
+  rating Float?
+  tags String[]
+  brand String?
+  sku String?
+  weight Float?
+  warrantyInformation String?
+  shippingInformation String?
+  availabilityStatus String?
+  returnPolicy String?
+  minimumOrderQuantity Int?
+  images String[]
+  thumbnail String
+  meta Metadata[]
+  dimensions Dimensions[]
+  category Category @relation(fields: [categoryId], references: [id])
+}
+
+model Reviews{
+  id Int @id @default(autoincrement())
+  productId Int 
+  userId Int
+  rating Int
+  comment String?
+  product Product @relation(fields: [productId], references: [id])
+
+}
+
+model Metadata{
+  id Int @id @default(autoincrement())
+  productId Int 
+  createdAt DateTime 
+  updatedAt DateTime @updatedAt
+  barcode String?
+  qrCode String?
+  product Product @relation(fields: [productId], references: [id])
+}
+model Dimensions{
+  id Int @id @default(autoincrement())
+  productId Int 
+  length Float?
+  width Float?
+  height Float?
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Category{
+  id Int @id @default(autoincrement())
+  name String @unique
+  slug String 
+  image String
+  products Product[]
+}
