@@ -1,13 +1,13 @@
-import ProductGrid from "../components/ProductGrid/ProductGrid";
-import WebshopSearchbar from "../components/Searchbar/WebshopSearchBar";
-import { AdaptivePagination } from "../components/Pagination/AdaptivePagination";
+import ProductGrid from "@components/ProductGrid/ProductGrid";
+import WebshopSearchBar from "@/app/components/Searchbar/WebshopSearchBar";
+import { AdaptivePagination } from "@components/Pagination/AdaptivePagination";
 import { redirect } from "next/navigation";
 import {
   buildProductSearchUrl,
   productSearchParamSchema as SearchParamSchema,
 } from "../lib/validation";
 import { getCategories, getProducts } from "../lib/api";
-import Hero from "./components/Hero";
+import Hero from "@components/Hero";
 
 interface HomeProps {
   searchParams: Promise<{
@@ -56,9 +56,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main>
-      <WebshopHeader />
       <Hero />
-      <WebshopSearchbar categories={categories} />
+      <WebshopSearchBar categories={categories} />
       <ProductGrid
         products={products}
         currentPage={page}
