@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import type { Product } from "../../types";
-
+import { getProduct } from "../../lib/api";
 export interface CartItem extends Product {
   quantity: number;
 }
@@ -79,18 +79,14 @@ export function CartProvider({ children }: CartProviderProps) {
             }
 
             try {
-              const response = await fetch(
-                `http://localhost:4000/products/${storedItem.productId}?_expand=category`,
-                { cache: "no-store" },
-              );
+  const product = await getProduct(storedItem.productId);
 
-              // Product no longer exists
-              if (!response.ok) {
-                return null;
-              }
+  // Product no longer exists
+  if (!product) {
+    return null;
+  }
 
-              const product = (await response.json()) as Product;
-              const stock = product.stock ?? 0;
+  const stock = product.stock ?? 0;
 
               // Product is out of stock
               if (stock <= 0) {
