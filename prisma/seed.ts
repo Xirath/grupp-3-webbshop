@@ -13,7 +13,7 @@ async function main() {
   const { categories, products } = JSON.parse(rawData);
 
   // Delete existing data to avoid conflicts
-  await prisma.review.deleteMany();
+  await prisma.reviews.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
 
@@ -80,9 +80,13 @@ async function main() {
     ),
   );
 
+  // Had to split them up (otherwise): 'ERROR: cannot insert multiple commands into a prepared statement'
   // Update PostgreSQL sequence counters for Category and Product tables
   await prisma.$executeRawUnsafe(`
     SELECT setval(pg_get_serial_sequence('"Category"', 'id'), coalesce(max(id), 1)) FROM "Category";
+  `);
+
+  await prisma.$executeRawUnsafe(`    
     SELECT setval(pg_get_serial_sequence('"Product"', 'id'), coalesce(max(id), 1)) FROM "Product";
   `);
 }

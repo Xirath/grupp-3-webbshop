@@ -1,61 +1,71 @@
-
-
+// Changed the generator provider to "prisma-client-js", the other is for prisma7
+// Removed output to use default location for prisma-client-js, if you want
+// to set it you can add the output to git-ignore so the generated files are not committed
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
+// We need to set the connection details for the database, they are located in the environment variables
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-
-model Product{
-  id Int @id @default(autoincrement())
-  title String @unique
-  description String?
-  price Float
-  stock Int
-  categoryId Int 
-  reviews Reviews[]
-  discountPercentage Float?
-  rating Float?
-  tags String[]
-  brand String?
-  sku String?
-  weight Float?
-  warrantyInformation String?
-  shippingInformation String?
-  availabilityStatus String?
-  returnPolicy String?
-  minimumOrderQuantity Int?
-  images String[]
-  thumbnail String
-  createdAt DateTime 
-  updatedAt DateTime
-  barcode String?
-  qrCode String?
-  length Float?
-  width Float?
-  height Float?
-  category Category @relation(fields: [categoryId], references: [id])
+// Added onDelete Cascade to make sure related records are deleted automatically when a parent record is deleted
+// Stock default 0
+// SKU @unique (Atleast is supposed to be unique, not sure if we check for that)
+// MinimumOrderQuantity default 1
+// CreatedAt default now, UpdatedAt auto-updates on modification
+// (Had to remove unique constraint on title, there where duplicates causing it to fail, might want to decide if it should be unique or not)
+// Changed length to depth for consistency with the dimensions object
+// Added unique to slug, to ensure each category has a distinct URL-friendly identifier
+model Product {
+  id                   Int       @id @default(autoincrement())
+  title                String
+  description          String?
+  price                Float
+  stock                Int       @default(0)
+  categoryId           Int
+  reviews              Reviews[]
+  discountPercentage   Float?
+  rating               Float?
+  tags                 String[]
+  brand                String?
+  sku                  String?   @unique
+  weight               Float?
+  warrantyInformation  String?
+  shippingInformation  String?
+  availabilityStatus   String?
+  returnPolicy         String?
+  minimumOrderQuantity Int?      @default(1)
+  images               String[]
+  thumbnail            String
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  barcode              String?
+  qrCode               String?
+  depth                Float?
+  width                Float?
+  height               Float?
+  category             Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
 
-model Reviews{
-  id Int @id @default(autoincrement())
-  productId Int 
-  userId Int
-  rating Int
-  comment String?
-  product Product @relation(fields: [productId], references: [id])
-
+model Reviews {
+  id            Int      @id @default(autoincrement())
+  productId     Int
+  rating        Int
+  comment       String?
+  date          DateTime @default(now())
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  reviewerName  String
+  reviewerEmail String
 }
 
-
-model Category{
-  id Int @id @default(autoincrement())
-  name String @unique
-  slug String 
-  image String
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  slug     String    @unique
+  image    String
   products Product[]
 }
