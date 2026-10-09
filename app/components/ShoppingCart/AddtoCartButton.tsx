@@ -2,7 +2,7 @@
 
 import { Product } from "@/app/types";
 import { useCart } from "./CartContent";
-import { getStockStatus, normalizeStock } from "../productUtils";
+import { normalizeStock } from "../productUtils";
 
 
 interface addToCartButtonProps {

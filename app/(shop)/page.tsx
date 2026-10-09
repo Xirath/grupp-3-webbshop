@@ -7,6 +7,7 @@ import {
   productSearchParamSchema as SearchParamSchema,
 } from "../lib/validation";
 import { getCategories, getProducts } from "../lib/api";
+import Hero from "./components/Hero";
 
 interface HomeProps {
   searchParams: Promise<{
@@ -55,6 +56,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main>
+      <WebshopHeader />
+      <Hero />
       <WebshopSearchbar categories={categories} />
       <ProductGrid
         products={products}
