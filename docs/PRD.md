@@ -113,25 +113,57 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **Vald Fas 1-kodbas:** Bygger på kod skriven av `https://github.com/ashahsana-sketch/Web-Shop`
 * **Nytt gemensamt GitHub-repo:** `https://github.com/Xirath/grupp-3-webbshop`
 * **Eventuella städnings- eller refaktoreringsbehov i basen innan start:**
-  - `[Beskriv kort vad som behöver fixas, t.ex. rensa död kod, städa CSS, fixa datastruktur]`
+  - Ta bort utkommenterad kod, rensa importer. Flytta om funktioner som anropar API:t, Omstrukturering av mappar för att få in ny struktur. 
 
 ---
 
 ### 5.2 Datamodell & API-kontrakt
 *Specificera hur er produktmodell ser ut för kundgränssnittet:*
 
-```json
+```typescript
 {
-  "id": "string | number",
-  "title": "string",
-  "description": "string",
-  "price": 0,
-  "category": "string",
-  "imageUrl": "string",
-  "stock": 0
+  id: number;
+  title: string;
+  description: string;
+  categoryId: number;
+  category?: Category;
+  price: number;
+  discountPercentage?: number;
+  rating?: number;
+  stock?: number;
+  tags?: string[];
+  brand?: string;
+  sku?: string;
+  weight?: number;
+  dimensions?: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  warrantyInformation?: string;
+  shippingInformation?: string;
+  availabilityStatus?: string;
+  reviews?: {
+    rating: number;
+    comment: string;
+    date: string;
+    reviewerName: string;
+    reviewerEmail: string;
+  }[];
+  returnPolicy?: string;
+  minimumOrderQuantity?: number;
+  meta: {
+    createdAt: string;
+    updatedAt: string;
+    barcode?: string;
+    qrCode?: string;
+  };
+  images: string[];
+  thumbnail: string;
 }
+
 ```
-*(Justera fälten ovan så de matchar er faktiska backend).*
+
 
 ---
 
@@ -144,10 +176,10 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **so that** *I don't have to scroll through all products to find what i'm looking for*
 
 **Acceptanskriterier (Given / When / Then):**
-* **Given** att jag befinner mig på produktkatalogen
-* **When** jag skriver "jacka" i sökfältet
-* **Then** uppdateras URL:en till `?search=jacka` och endast produkter med "jacka" i titeln eller beskrivningen visas.
-* **And** om inga varor matchar visas ett tydligt meddelande: "Inga produkter matchade din sökning".
+* **Given** that I would like to find a specific product
+* **When** typing in the specific product in a searchbar
+* **Then** The product catalog should display matches of the searchword matching on either a word in the title or description.
+* **And** if no products match the search a message will be shown saying "Couldn't find a match for your search".
 
 #### User Story 2: Product catalog
 * **As a** `Customer`
