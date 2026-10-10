@@ -1,14 +1,13 @@
-import ProductGrid from "./components/ProductGrid/ProductGrid";
-import WebshopHeader from "./components/Header/WebshopHeader";
-import WebshopSearchbar from "./components/Searchbar/WebshopSearchBar";
-import { AdaptivePagination } from "./components/Pagination/AdaptivePagination";
-import { redirect } from "next/navigation";
 import {
-  buildProductSearchUrl,
   productSearchParamSchema as SearchParamSchema,
-} from "./lib/validation";
-import { getCategories, getProducts } from "./lib/api";
-import Hero from "./components/Hero";
+  buildProductSearchUrl,
+} from "@lib/validation";
+
+import SummaryCards from "@components/Summary-card/SummaryCard";
+import SearchBar from "@components/Searchbar/SearchBar";
+import ProductTable from "@components/ProductTable";
+import { getCategories, getProducts, getProductStock } from "@lib/api";
+import { redirect } from "next/navigation";
 
 interface HomeProps {
   searchParams: Promise<{
@@ -42,9 +41,10 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   // Fetch paginated products and categories in parallel
-  const [paginatedData, categories] = await Promise.all([
+  const [paginatedData, categories, summary] = await Promise.all([
     getProducts({ page: requestedPage, categoryId, search }),
     getCategories(),
+    getProductStock(),
   ]);
 
   // Destructure the paginated data for easier access
@@ -55,20 +55,25 @@ export default async function Home({ searchParams }: HomeProps) {
     redirect(buildProductSearchUrl({ categoryId, search, page: pages }));
   }
 
+  // Construct the current URL with query parameters
+  const query = new URLSearchParams(
+    params as Record<string, string>,
+  ).toString();
+  const currentURL = `/admin${query ? `?${query}` : ""}`;
+
   return (
     <main>
-      <WebshopHeader />
-      <Hero />
-      <WebshopSearchbar categories={categories} />
-      <ProductGrid
-        products={products}
-        currentPage={page}
-        totalPages={pages}
-        totalItems={total}
-        pageSize={limit}
+      <SummaryCards
+        total={summary.total}
+        inStock={summary.inStock}
+        lowStock={summary.lowStock}
+        outOfStock={summary.outOfStock}
       />
-      <div className="mt-auto mb-12">
-        <AdaptivePagination
+      <SearchBar categories={categories} />
+      <div className="page-container">
+        <ProductTable
+          products={products}
+          returnTo={currentURL}
           currentPage={page}
           totalPages={pages}
           totalItems={total}

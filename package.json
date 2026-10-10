@@ -4,11 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe --all-snapshot",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^7.0.0",
+    "@stripe/stripe-js": "^10.0.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.3",
     "lucide-react": "^1.28.0",
@@ -16,11 +19,14 @@
     "qrcode.react": "^4.2.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "server-only": "^0.0.1",
     "sharp": "^0.35.4",
+    "stripe": "^23.0.0",
     "thumbhash": "^0.1.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@stripe/cli": "^1.53.0",
     "@prisma/client": "^6.19.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
