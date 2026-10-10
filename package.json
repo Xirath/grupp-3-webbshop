@@ -4,8 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "mock-server": "json-server --watch server/products.json --middlewares server/middleware.js --port 4000",
-    "dev:full": "concurrently \"npm run dev\" \"npm run mock-server\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -31,7 +29,6 @@
     "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
-    "json-server": "^0.17.4",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "prisma": "^6.19.3",
     "tailwindcss": "^4",
