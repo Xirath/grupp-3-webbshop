@@ -1,6 +1,6 @@
 import ProductGrid from "./components/ProductGrid/ProductGrid";
-import WebshopHeader from "./components/Header/webshopHeader";
-import WebshopSearchbar from "./components/Searchbar/WebshopSearchbar";
+import WebshopHeader from "./components/Header/WebshopHeader";
+import WebshopSearchbar from "./components/Searchbar/WebshopSearchBar";
 import { AdaptivePagination } from "./components/Pagination/AdaptivePagination";
 import { redirect } from "next/navigation";
 import {
@@ -14,8 +14,8 @@ interface HomeProps {
   searchParams: Promise<{
     page?: string;
     categoryId?: string;
-    stock?: string; 
-    search?: string; 
+    stock?: string;
+    search?: string;
   }>;
 }
 
@@ -57,7 +57,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main>
-      <WebshopHeader/>
+      <WebshopHeader />
       <Hero />
       <WebshopSearchbar categories={categories} />
       <ProductGrid
