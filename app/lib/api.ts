@@ -145,8 +145,9 @@ export async function updateProduct(
   payload: UpdateProductInput,
 ): Promise<{ ok: boolean }> {
   try {
-    const { dimensions, meta, reviews, ...rest } = payload;
-    const updatedProduct = await prisma.product.update({
+    const { reviews: _reviews, dimensions, meta, ...rest } = payload;
+    void _reviews;
+    await prisma.product.update({
       where: { id: productId },
       data: {
         ...rest,
@@ -164,7 +165,7 @@ export async function updateProduct(
     return {
       ok: true,
     };
-  } catch (error) {
+  } catch {
     return { ok: false };
   }
 }
@@ -179,7 +180,7 @@ export async function updateProductStock(
       data: { stock },
     });
     return { ok: true };
-  } catch (error) {
+  } catch {
     return { ok: false };
   }
 }
@@ -192,36 +193,61 @@ export async function deleteProduct(
       where: { id: productId },
     });
     return { ok: true };
-  } catch (error) {
+  } catch {
     return { ok: false };
   }
 }
 
-// // Since some fields are flattened in the Prisma product, we need to convert them back to the nested structure expected by the frontend.
-function convertFromPrismaProduct(prismaProduct: any): Product {
-  // Destructure the flattened fields from the Prisma product object.
-  const {
-    width,
-    height,
-    depth,
-    barcode,
-    qrCode,
-    createdAt,
-    updatedAt,
-    ...rest
-  } = prismaProduct;
+type DbProduct = Prisma.ProductGetPayload<{
+  include: { category?: true; reviews?: true };
+}>;
+
+// Since some fields are flattened in the Prisma product, we need to convert them back to the nested structure expected by the frontend.
+function convertFromPrismaProduct(p: DbProduct): Product {
   return {
-    ...rest,
+    id: p.id,
+    title: p.title,
+    description: p.description ?? "",
+    categoryId: p.categoryId,
+    category: p.category ?? undefined,
+    price: p.price,
+    discountPercentage: p.discountPercentage ?? 0,
+    rating: p.rating ?? 0,
+    stock: p.stock ?? 0,
+    tags: p.tags,
+    brand: p.brand ?? "Generic",
+    sku: p.sku ?? undefined,
+    weight: p.weight ?? undefined,
+    warrantyInformation: p.warrantyInformation ?? undefined,
+    shippingInformation: p.shippingInformation ?? undefined,
+    availabilityStatus: p.availabilityStatus ?? undefined,
+    returnPolicy: p.returnPolicy ?? undefined,
+    minimumOrderQuantity: p.minimumOrderQuantity ?? 1,
+    images: p.images,
+    thumbnail: p.thumbnail,
     dimensions: {
-      width: width ?? 0,
-      height: height ?? 0,
-      depth: depth ?? 0,
+      width: p.width ?? 0,
+      height: p.height ?? 0,
+      depth: p.depth ?? 0,
     },
     meta: {
-      createdAt: createdAt ?? new Date().toString(),
-      updatedAt: updatedAt ?? new Date().toString(),
-      barcode: barcode ?? undefined,
-      qrCode: qrCode ?? undefined,
+      createdAt: p.createdAt
+        ? p.createdAt.toISOString()
+        : new Date().toISOString(),
+      updatedAt: p.updatedAt
+        ? p.updatedAt.toISOString()
+        : new Date().toISOString(),
+      barcode: p.barcode ?? undefined,
+      qrCode: p.qrCode ?? undefined,
     },
+    reviews: p.reviews
+      ? p.reviews.map((r) => ({
+          rating: r.rating,
+          comment: r.comment ?? "",
+          date: r.date ? r.date.toISOString() : new Date().toISOString(),
+          reviewerName: r.reviewerName,
+          reviewerEmail: r.reviewerEmail,
+        }))
+      : [],
   };
 }

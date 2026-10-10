@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
+import type { Category, Product } from "@/app/types";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +20,7 @@ async function main() {
 
   // Insert categories into the database, needs to be done before inserting products due to foreign key constraints
   await prisma.category.createMany({
-    data: categories.map((cat: any) => ({
+    data: categories.map((cat: Category) => ({
       id: cat.id,
       name: cat.name,
       slug: cat.slug,
@@ -28,7 +29,7 @@ async function main() {
   });
 
   await prisma.$transaction(
-    products.map((prod: any) =>
+    products.map((prod: Product) =>
       prisma.product.create({
         data: {
           id: prod.id,
@@ -67,7 +68,7 @@ async function main() {
           thumbnail: prod.thumbnail,
 
           reviews: {
-            create: (prod.reviews || []).map((rev: any) => ({
+            create: (prod.reviews || []).map((rev) => ({
               rating: rev.rating,
               comment: rev.comment,
               date: new Date(rev.date),
