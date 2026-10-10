@@ -175,7 +175,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **I would like** *to seqarch for a specific product*
 * **so that** *I don't have to scroll through all products to find what i'm looking for*
 
-**Acceptanskriterier (Given / When / Then):**
+**Acceptance criterias:**
 * **Given** that I would like to find a specific product
 * **When** typing in the specific product in a searchbar
 * **Then** The product catalog should display matches of the searchword matching on either a word in the title or description.
@@ -186,7 +186,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **I would like** ` to see all the products availble in a list/grid `
 * **so that** `so that I can get an overview of what the store is offering`
 
-**Acceptanskriterier:**
+**Acceptance criterieas:**
 * **Given** `that i'm on the product page`
 * **When** `no filters have been applied`
 * **Then** `I should see all products`
@@ -196,7 +196,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **I would like** `to see detailed information about a product`
 * **so that** `I can learn about the product before buying it`
 
-**Acceptanskriterier:**
+**Acceptance criterias:**
 * **Given** `I click on a specific product`
 * **When** `in the product store`
 * **Then** `I can see the detailed information about the product`
@@ -206,7 +206,7 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **I would like** `to be able to see the pages of the shop clearly in my mobile phone`
 * **so that** `I can shop from anywhere  ` 
 
-**Acceptanskriterier:**
+**Acceptance criterieas:**
 * **Given** `viewing the app from my phone`
 * **When** `trying to shop`
 * **Then** `I can see the detailed information about the product and get a good overview of all products`
@@ -216,20 +216,20 @@ För att särskilja ert erbjudande och skapa extra affärsvärde har kunden list
 * **I would like** `to view my shopping cart`
 * **so that** `I get a summary of my order, the products and how many and how much they cost and the total for the order` 
 
-**Acceptanskriterier:**
+**Acceptance criterias:**
 * **Given** `that I am currently viewing the store`
 * **When** `I click on the shopping cart link/icon`
 * **Then** `navigate to the shopping cart page and show the orders total cost and list all the products and how many of each is ordered and their price`
 
 **User Story 8: Pagination**
-As a Customer
-I would like to navigate between pages in the product catalogue
-so that I can easily browse all available products without having every product displayed on the same page
+* **As a** Customer
+* **I would like** to navigate between pages in the product catalogue
+* **so that** I can easily browse all available products without having every product displayed on the same page
 
-**Acceptance criteria:**
-Given there are more products than can be displayed on one page
-When I am browsing the product store
-Then I can navigate forwards, backwards, or directly to a specific page, and the selected page is shown in the URL
+**Acceptance criterias:**
+* **Given** there are more products than can be displayed on one page
+* **When** I am browsing the product store
+* **Then** I can navigate forwards, backwards, or directly to a specific page, and the selected page is shown in the URL
 
 
   
