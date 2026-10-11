@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Ballet } from "next/font/google";
-import "./globals.css";
-import { CartProvider } from "./components/ShoppingCart/CartContent";
+import "@app/globals.css";
+import { CartProvider } from "@components/ShoppingCart/CartContent";
+import WebshopHeader from "@/app/components/Header/WebshopHeader";
 
 const ballet = Ballet({
   variable: "--font-ballet",
@@ -13,7 +14,6 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -21,7 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "BuyIT Webshop",
-  description: "A modern webshop built with Next.js 15, TypeScript, Tailwind CSS",
+  description:
+    "A modern webshop built with Next.js 15, TypeScript, Tailwind CSS",
 };
 
 export default function RootLayout({
@@ -34,8 +35,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${ballet.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <CartProvider>{children}</CartProvider>
+      <body className="flex min-h-full flex-col">
+        <CartProvider>
+          <WebshopHeader />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

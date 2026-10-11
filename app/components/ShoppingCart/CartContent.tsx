@@ -8,11 +8,7 @@ import {
   useState,
 } from "react";
 
-import type { Product } from "../../types";
-
-export interface CartItem extends Product {
-  quantity: number;
-}
+import type { CartItem, Product } from "../../types";
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -59,6 +55,24 @@ export function CartProvider({ children }: CartProviderProps) {
     }
 
     setIsLoaded(true);
+
+    // Listen for changes to the shopping cart in other tabs
+    function handleStorageChange(event: StorageEvent) {
+      if (event.key === "shopping-cart" && event.newValue) {
+        try {
+          const updatedCart = JSON.parse(event.newValue) as CartItem[];
+          setCartItems(updatedCart);
+        } catch (err) {
+          console.error("Failed to parse cart from another tab", err);
+        }
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   // I use localStorage here so the cart doesn't disappear when the page is refreshed
@@ -118,6 +132,7 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   function clearCart() {
+    localStorage.removeItem("shopping-cart");
     setCartItems([]);
   }
 

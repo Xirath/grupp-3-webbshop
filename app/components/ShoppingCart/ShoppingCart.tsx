@@ -1,7 +1,8 @@
 "use client";
 
 import { useCart } from "./CartContent";
-import {formatPrice} from "../productUtils";
+import { formatPrice } from "../productUtils";
+import Link from "next/link";
 
 export default function ShoppingCart() {
   const {
@@ -17,9 +18,7 @@ export default function ShoppingCart() {
   return (
     <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold">
-          🛒 Shopping Cart ({totalItems})
-        </h2>
+        <h2 className="text-xl font-bold">🛒 Shopping Cart ({totalItems})</h2>
 
         {cartItems.length > 0 && (
           <button
@@ -45,7 +44,7 @@ export default function ShoppingCart() {
                 <p className="font-semibold">{item.title}</p>
 
                 <p className="text-sm text-gray-500">
-                  {formatPrice(item.price)} 
+                  {formatPrice(item.price)}
                 </p>
               </div>
 
@@ -58,9 +57,7 @@ export default function ShoppingCart() {
                   −
                 </button>
 
-                <span className="min-w-6 text-center">
-                  {item.quantity}
-                </span>
+                <span className="min-w-6 text-center">{item.quantity}</span>
 
                 <button
                   type="button"
@@ -86,6 +83,12 @@ export default function ShoppingCart() {
             <span>Total</span>
             <span>{formatPrice(totalPrice)}</span>
           </div>
+          <Link
+            href="/checkout"
+            className="text-sm text-violet-600 hover:underline"
+          >
+            Proceed to Checkout
+          </Link>
         </div>
       )}
     </section>
