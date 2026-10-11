@@ -18,16 +18,16 @@ export default function WebshopHeader() {
           href="/"
           className="flex items-center gap-2 font-semibold text-2xl"
         >
-          <Image src="/buyit.jpg" alt="Logo" width={80} height={80} />
+          <Image src="/buyit.jpg" alt="BuyIT homepage" width={80} height={80} />
         </Link>
         <p className="text-m font-semibold text-gray-700">
           Welcome to our webshop! Explore our products and enjoy a seamless
           shopping experience.
         </p>
         <div className="flex items-center gap-4">
-          <Link href="/">
-            <User size={32} />
-          </Link>
+          <Link href="/" aria-label="Go to homepage">
+  <User size={32} aria-hidden="true" />
+</Link>
           <div className="flex items-center gap-3">
             <button
               type="button"

@@ -1,7 +1,7 @@
 "use client";
 
 // import { useRouter } from "next/navigation";
-import Button from "./Button";
+import Button from "./button";
 
 export default function Header() {
   return (
