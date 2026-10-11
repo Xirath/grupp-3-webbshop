@@ -8,11 +8,13 @@ import {
   useState,
 } from "react";
 
-import type { Product } from "../../types";
+
+import type { CartItem, Product } from "../../types";
 import { getProduct } from "../../lib/api";
-export interface CartItem extends Product {
-  quantity: number;
-}
+
+
+
+
 
 // Only this information is stored in localStorage
 interface StoredCartItem {
@@ -119,7 +121,26 @@ export function CartProvider({ children }: CartProviderProps) {
       }
     }
 
+
     void loadCart();
+
+    
+
+    // Listen for changes to the shopping cart in other tabs
+    function handleStorageChange(event: StorageEvent) {
+      if (event.key === "shopping-cart" ) {
+        void loadCart();
+        
+     
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+
   }, []);
 
   // Save only product ID and quantity in localStorage
@@ -190,6 +211,7 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   function clearCart() {
+    localStorage.removeItem("shopping-cart");
     setCartItems([]);
   }
 

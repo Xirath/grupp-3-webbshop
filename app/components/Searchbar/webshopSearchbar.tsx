@@ -5,11 +5,11 @@ import { Filter } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Category } from "../../types";
 
-interface WebshopSearchBarProps {
+interface WebshopSearchbarProps {
   categories: Category[];
 }
 
-export default function WebshopSearchBar({ categories }: WebshopSearchBarProps) {
+export default function WebshopSearchbar({ categories }: WebshopSearchbarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

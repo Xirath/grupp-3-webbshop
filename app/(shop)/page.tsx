@@ -1,13 +1,13 @@
-import {
-  productSearchParamSchema as SearchParamSchema,
-  buildProductSearchUrl,
-} from "../lib/validation";
-import Header from "../components/Header/Header";
-import SummaryCards from "../components/Summary-card/SummaryCard";
-import SearchBar from "../components/Searchbar/SearchBar";
-import ProductTable from "../components/ProductTable";
-import { getCategories, getProducts, getProductStock } from "../lib/api";
+import ProductGrid from "@components/ProductGrid/ProductGrid";
+import WebshopSearchBar from "@/app/components/Searchbar/WebshopSearchBar";
+import { AdaptivePagination } from "@components/Pagination/AdaptivePagination";
 import { redirect } from "next/navigation";
+import {
+  buildProductSearchUrl,
+  productSearchParamSchema as SearchParamSchema,
+} from "../lib/validation";
+import { getCategories, getProducts } from "../lib/api";
+import Hero from "@components/Hero";
 
 interface HomeProps {
   searchParams: Promise<{
@@ -41,10 +41,9 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   // Fetch paginated products and categories in parallel
-  const [paginatedData, categories, summary] = await Promise.all([
+  const [paginatedData, categories] = await Promise.all([
     getProducts({ page: requestedPage, categoryId, search }),
     getCategories(),
-    getProductStock(),
   ]);
 
   // Destructure the paginated data for easier access
@@ -55,26 +54,19 @@ export default async function Home({ searchParams }: HomeProps) {
     redirect(buildProductSearchUrl({ categoryId, search, page: pages }));
   }
 
-  // Construct the current URL with query parameters
-  const query = new URLSearchParams(
-    params as Record<string, string>,
-  ).toString();
-  const currentURL = `/admin${query ? `?${query}` : ""}`;
-
   return (
     <main>
-      <Header />
-      <SummaryCards
-        total={summary.total}
-        inStock={summary.inStock}
-        lowStock={summary.lowStock}
-        outOfStock={summary.outOfStock}
+      <Hero />
+      <WebshopSearchBar categories={categories} />
+      <ProductGrid
+        products={products}
+        currentPage={page}
+        totalPages={pages}
+        totalItems={total}
+        pageSize={limit}
       />
-      <SearchBar categories={categories} />
-      <div className="page-container">
-        <ProductTable
-          products={products}
-          returnTo={currentURL}
+      <div className="mt-auto mb-12">
+        <AdaptivePagination
           currentPage={page}
           totalPages={pages}
           totalItems={total}
