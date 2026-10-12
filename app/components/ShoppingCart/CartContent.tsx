@@ -8,7 +8,19 @@ import {
   useState,
 } from "react";
 
+
 import type { CartItem, Product } from "../../types";
+import { getProduct } from "../../lib/api";
+
+
+
+
+
+// Only this information is stored in localStorage
+interface StoredCartItem {
+  productId: number;
+  quantity: number;
+}
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -27,7 +39,6 @@ interface CartProviderProps {
   children: ReactNode;
 }
 
-// Helper function to increase quantity without repeating the same code
 function increaseItemQuantity(item: CartItem): CartItem {
   const maxQuantity = item.stock ?? Infinity;
 
@@ -41,30 +52,86 @@ export function CartProvider({ children }: CartProviderProps) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load cart from the browser when the app starts
+  // Load and validate the cart when the app starts
   useEffect(() => {
-    const savedCart = localStorage.getItem("shopping-cart");
+    async function loadCart() {
+      const savedCart = localStorage.getItem("shopping-cart");
 
-    if (savedCart) {
+      if (!savedCart) {
+        setIsLoaded(true);
+        return;
+      }
+
       try {
-        const parsedCart = JSON.parse(savedCart) as CartItem[];
-        setCartItems(parsedCart);
+        const parsedCart = JSON.parse(savedCart) as StoredCartItem[];
+
+        if (!Array.isArray(parsedCart)) {
+          throw new Error("Invalid cart data");
+        }
+
+        const validatedItems = await Promise.all(
+          parsedCart.map(async (storedItem) => {
+            if (
+              !Number.isInteger(storedItem.productId) ||
+              storedItem.productId <= 0 ||
+              !Number.isInteger(storedItem.quantity) ||
+              storedItem.quantity <= 0
+            ) {
+              return null;
+            }
+
+            try {
+  const product = await getProduct(storedItem.productId);
+
+  // Product no longer exists
+  if (!product) {
+    return null;
+  }
+
+  const stock = product.stock ?? 0;
+
+              // Product is out of stock
+              if (stock <= 0) {
+                return null;
+              }
+
+              // Never keep more items than are currently in stock
+              const quantity = Math.min(storedItem.quantity, stock);
+
+              return {
+                ...product,
+                quantity,
+              } satisfies CartItem;
+            } catch {
+              return null;
+            }
+          }),
+        );
+
+        const validCartItems = validatedItems.filter(
+          (item): item is CartItem => item !== null,
+        );
+
+        setCartItems(validCartItems);
       } catch {
         localStorage.removeItem("shopping-cart");
+        setCartItems([]);
+      } finally {
+        setIsLoaded(true);
       }
     }
 
-    setIsLoaded(true);
+
+    void loadCart();
+
+    
 
     // Listen for changes to the shopping cart in other tabs
     function handleStorageChange(event: StorageEvent) {
-      if (event.key === "shopping-cart" && event.newValue) {
-        try {
-          const updatedCart = JSON.parse(event.newValue) as CartItem[];
-          setCartItems(updatedCart);
-        } catch (err) {
-          console.error("Failed to parse cart from another tab", err);
-        }
+      if (event.key === "shopping-cart" ) {
+        void loadCart();
+        
+     
       }
     }
 
@@ -73,13 +140,19 @@ export function CartProvider({ children }: CartProviderProps) {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
+
   }, []);
 
-  // I use localStorage here so the cart doesn't disappear when the page is refreshed
+  // Save only product ID and quantity in localStorage
   useEffect(() => {
     if (!isLoaded) return;
 
-    localStorage.setItem("shopping-cart", JSON.stringify(cartItems));
+    const storedCart: StoredCartItem[] = cartItems.map((item) => ({
+      productId: item.id,
+      quantity: item.quantity,
+    }));
+
+    localStorage.setItem("shopping-cart", JSON.stringify(storedCart));
   }, [cartItems, isLoaded]);
 
   function addToCart(product: Product) {
@@ -90,6 +163,12 @@ export function CartProvider({ children }: CartProviderProps) {
         return currentItems.map((item) =>
           item.id === product.id ? increaseItemQuantity(item) : item,
         );
+      }
+
+      const stock = product.stock ?? 0;
+
+      if (stock <= 0) {
+        return currentItems;
       }
 
       return [
