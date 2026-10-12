@@ -50,7 +50,7 @@ export async function updateProductAction(
     rating,
     thumbnail,
   } = result.data;
-  let response: Response;
+  let response: { ok: boolean };
   try {
     response = await updateProduct(productId, {
       title,

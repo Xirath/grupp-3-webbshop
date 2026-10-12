@@ -1,12 +1,10 @@
 {
-  "name": "projekt-agila-metoder-startkod",
+  "name": "grupp-3-webbshop",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe --all-snapshot",
-    "mock-server": "json-server --watch server/products.json --middlewares server/middleware.js --port 4000",
-    "dev:full": "concurrently \"npm run dev\" \"npm run mock-server\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -14,6 +12,8 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^7.0.0",
     "@stripe/stripe-js": "^10.0.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.3",
     "lucide-react": "^1.28.0",
     "next": "^16.3.3",
     "qrcode.react": "^4.2.0",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@stripe/cli": "^1.53.0",
+    "@prisma/client": "^6.19.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -34,9 +35,13 @@
     "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
-    "json-server": "^0.17.4",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "prisma": "^6.19.3",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

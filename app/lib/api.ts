@@ -1,3 +1,6 @@
+import { prisma } from "./prisma";
+import { Prisma } from "@prisma/client";
+
 import type {
   Category,
   Product,
@@ -6,7 +9,6 @@ import type {
   UpdateProductInput,
 } from "@/app/types";
 
-const API_URL = "http://localhost:4000";
 const DEFAULT_LIMIT = "12";
 
 export interface ProductFilterParams {
@@ -16,48 +18,19 @@ export interface ProductFilterParams {
   search?: string;
 }
 
-export async function addProduct(
-  payload: CreateProductInput,
-): Promise<Product> {
-  const response = await fetch(`${API_URL}/products`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error("Failed to add product");
-  return response.json() as Promise<Product>;
-}
-
-export async function getNextId() {
-  try {
-    const res = await fetch(`${API_URL}/products`, { cache: "no-store" });
-    if (res.ok) {
-      const data = await res.json();
-      const list: Product[] = Array.isArray(data)
-        ? data
-        : data.products || data.data || [];
-      if (list.length > 0) {
-        const ids = list
-          .map((p) => Number(p.id))
-          .filter((id) => !Number.isNaN(id));
-        return ids.length > 0 ? Math.max(...ids) + 1 : 1;
-      }
-    }
-  } catch (err) {
-    console.error("Failed to fetch next ID:", err);
-  }
-  return 1;
+export interface ProductStockResponse {
+  total: number;
+  lowStock: number;
+  outOfStock: number;
+  inStock: number;
 }
 
 export async function getProduct(productId: number): Promise<Product | null> {
-  const response = await fetch(
-    `${API_URL}/products/${productId}?_expand=category`,
-    { cache: "no-store" },
-  );
-  if (response.status === 404) return null;
-  if (!response.ok) throw new Error(`Unable to load product ${productId}`);
-
-  return (await response.json()) as Product;
+  const Product = await prisma.product.findUnique({
+    where: { id: productId },
+    include: { category: true, reviews: { orderBy: { date: "desc" } } },
+  });
+  return Product ? convertFromPrismaProduct(Product) : null;
 }
 
 export async function getProducts({
@@ -66,79 +39,215 @@ export async function getProducts({
   categoryId,
   search,
 }: ProductFilterParams = {}): Promise<ProductsResponse> {
-  const query = new URLSearchParams({
-    _page: String(page),
-    _limit: String(limit),
-    _sort: "id",
-    _order: "desc",
-    _expand: "category",
-  });
-  if (categoryId) query.set("categoryId", categoryId);
-  if (search?.trim()) query.set("q", search.trim());
-  const response = await fetch(`${API_URL}/products?${query.toString()}`, {
-    next: { tags: ["products"], revalidate: 15 },
-  });
-  if (!response.ok) throw new Error("Failed to fetch products");
-  return response.json();
+  // Prisma has built-in support for pagination using skip and take.
+  const PageNumber = Math.max(1, page);
+  const take = Math.max(1, limit);
+  const skip = (PageNumber - 1) * take;
+
+  const where: Prisma.ProductWhereInput = {};
+
+  if (categoryId) {
+    where.categoryId = parseInt(categoryId, 10);
+  }
+
+  if (search?.trim()) {
+    const searchString = search.trim();
+    where.OR = [
+      { title: { contains: searchString, mode: "insensitive" } },
+      { tags: { has: searchString.toLowerCase() } },
+      { brand: { contains: searchString, mode: "insensitive" } },
+    ];
+  }
+
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      skip,
+      take,
+      include: { category: true, reviews: { orderBy: { date: "desc" } } },
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  const pages = Math.ceil(total / take);
+
+  return {
+    products: products.map(convertFromPrismaProduct),
+    total,
+    limit: take,
+    page: PageNumber,
+    pages,
+  };
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const response = await fetch(`${API_URL}/categories`, { cache: "no-store" });
-  if (!response.ok) throw new Error("Unable to load categories");
-
-  return (await response.json()) as Category[];
+  const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+  });
+  return categories;
 }
 
-export interface ProductStockResponse {
-  total: number;
-  lowStock: number;
-  outOfStock: number;
-  inStock: number;
+export async function getProductStock(): Promise<ProductStockResponse> {
+  const [inStock, lowStock, outOfStock, total] = await Promise.all([
+    prisma.product.count({ where: { stock: { gt: 10 } } }),
+    prisma.product.count({ where: { stock: { gt: 0, lte: 10 } } }),
+    prisma.product.count({ where: { stock: { lte: 0 } } }),
+    prisma.product.count(),
+  ]);
+
+  return { inStock, lowStock, outOfStock, total };
 }
 
-export async function getProductStock({}: ProductFilterParams = {}): Promise<ProductStockResponse> {
-  const allProductsData = await fetch(`${API_URL}/products`, {
-    next: { tags: ["products"], revalidate: 15 },
-  }).then((res) => res.json() as Promise<{ products: Product[] }>);
-
-  const allProducts = allProductsData.products ?? [];
-  const summary = allProducts.reduce(
-    (acc, item) => {
-      const itemCount = item.stock ?? 0;
-      if (itemCount > 10) acc.inStock++;
-      else if (itemCount > 0) acc.lowStock++;
-      else acc.outOfStock++;
-      return acc;
+export async function addProduct(
+  payload: CreateProductInput,
+): Promise<Product> {
+  const newProduct = await prisma.product.create({
+    data: {
+      title: payload.title,
+      description: payload.description || "",
+      categoryId: payload.categoryId,
+      price: payload.price,
+      discountPercentage: payload.discountPercentage ?? 0,
+      rating: payload.rating ?? 0,
+      stock: payload.stock ?? 0,
+      tags: payload.tags ?? [],
+      brand: payload.brand || "Generic",
+      sku: payload.sku || `SKU-${Date.now()}`, // Should make better unique SKU generation in the future.
+      weight: payload.weight ?? 0,
+      width: payload.dimensions?.width ?? 0,
+      height: payload.dimensions?.height ?? 0,
+      depth: payload.dimensions?.depth ?? 0,
+      warrantyInformation: payload.warrantyInformation,
+      shippingInformation: payload.shippingInformation,
+      availabilityStatus: payload.availabilityStatus,
+      returnPolicy: payload.returnPolicy,
+      minimumOrderQuantity: payload.minimumOrderQuantity ?? 1,
+      barcode: payload.meta?.barcode,
+      qrCode: payload.meta?.qrCode,
+      images: payload.images ?? [],
+      thumbnail: payload.thumbnail,
     },
-    { inStock: 0, lowStock: 0, outOfStock: 0, total: allProducts.length },
-  );
-  return summary;
+    include: { category: true, reviews: true },
+  });
+  return convertFromPrismaProduct(newProduct);
+}
+
+// Using prisma aggregate to get the next available product ID.
+export async function getNextId(): Promise<number> {
+  const highest = await prisma.product.aggregate({
+    _max: { id: true },
+  });
+  return (highest._max.id ?? 0) + 1;
 }
 
 export async function updateProduct(
   productId: number,
   payload: UpdateProductInput,
-): Promise<Response> {
-  return fetch(`${API_URL}/products/${productId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+): Promise<{ ok: boolean }> {
+  try {
+    const { reviews: _reviews, dimensions, meta, ...rest } = payload;
+    void _reviews;
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        ...rest,
+        ...(dimensions && {
+          width: dimensions.width ?? 0,
+          height: dimensions.height ?? 0,
+          depth: dimensions.depth ?? 0,
+        }),
+        ...(meta && {
+          barcode: meta?.barcode,
+          qrCode: meta?.qrCode,
+        }),
+      },
+    });
+    return {
+      ok: true,
+    };
+  } catch {
+    return { ok: false };
+  }
 }
 
 export async function updateProductStock(
   productId: number,
   stock: number,
-): Promise<Response> {
-  return fetch(`${API_URL}/products/${productId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ stock }),
-  });
+): Promise<{ ok: boolean }> {
+  try {
+    await prisma.product.update({
+      where: { id: productId },
+      data: { stock },
+    });
+    return { ok: true };
+  } catch {
+    return { ok: false };
+  }
 }
 
-export async function deleteProduct(productId: number): Promise<Response> {
-  return fetch(`${API_URL}/products/${productId}`, {
-    method: "DELETE",
-  });
+export async function deleteProduct(
+  productId: number,
+): Promise<{ ok: boolean }> {
+  try {
+    await prisma.product.delete({
+      where: { id: productId },
+    });
+    return { ok: true };
+  } catch {
+    return { ok: false };
+  }
+}
+
+type DbProduct = Prisma.ProductGetPayload<{
+  include: { category?: true; reviews?: true };
+}>;
+
+// Since some fields are flattened in the Prisma product, we need to convert them back to the nested structure expected by the frontend.
+function convertFromPrismaProduct(p: DbProduct): Product {
+  return {
+    id: p.id,
+    title: p.title,
+    description: p.description ?? "",
+    categoryId: p.categoryId,
+    category: p.category ?? undefined,
+    price: p.price,
+    discountPercentage: p.discountPercentage ?? 0,
+    rating: p.rating ?? 0,
+    stock: p.stock ?? 0,
+    tags: p.tags,
+    brand: p.brand ?? "Generic",
+    sku: p.sku ?? undefined,
+    weight: p.weight ?? undefined,
+    warrantyInformation: p.warrantyInformation ?? undefined,
+    shippingInformation: p.shippingInformation ?? undefined,
+    availabilityStatus: p.availabilityStatus ?? undefined,
+    returnPolicy: p.returnPolicy ?? undefined,
+    minimumOrderQuantity: p.minimumOrderQuantity ?? 1,
+    images: p.images,
+    thumbnail: p.thumbnail,
+    dimensions: {
+      width: p.width ?? 0,
+      height: p.height ?? 0,
+      depth: p.depth ?? 0,
+    },
+    meta: {
+      createdAt: p.createdAt
+        ? p.createdAt.toISOString()
+        : new Date().toISOString(),
+      updatedAt: p.updatedAt
+        ? p.updatedAt.toISOString()
+        : new Date().toISOString(),
+      barcode: p.barcode ?? undefined,
+      qrCode: p.qrCode ?? undefined,
+    },
+    reviews: p.reviews
+      ? p.reviews.map((r) => ({
+          rating: r.rating,
+          comment: r.comment ?? "",
+          date: r.date ? r.date.toISOString() : new Date().toISOString(),
+          reviewerName: r.reviewerName,
+          reviewerEmail: r.reviewerEmail,
+        }))
+      : [],
+  };
 }
