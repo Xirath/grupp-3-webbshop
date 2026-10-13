@@ -5,7 +5,10 @@ This is a webshop project built with Next.js and TypeScript as part of a course 
 The webhops has and admin part for managing inventory in the webshop. You are able to add, delete and update products and have a nice overview of the stock to make manganing inventory smooth and easy. 
 
 The webshop also have the customer part with a nice grid to display all products. As a customer you are able to easily browse through the products by filtering and searching for products and add them to your shopping cart. From the shopping cart the customer can checkout and pay. The webshop uses the stripe API so that you easily can connect the webshop to your choice of payment solutions.
- 
+
+<img width="2555" height="1305" alt="image" src="https://github.com/user-attachments/assets/04b7a249-edda-402a-947b-1f1624f00ddc" />
+<img width="2555" height="1297" alt="image" src="https://github.com/user-attachments/assets/01581f74-601b-40e6-b4b4-e6ab1bc0cb7d" />
+
 ## :bulb: Features
  
 - Product listing
