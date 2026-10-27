@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Ballet } from "next/font/google";
 import "@app/globals.css";
 import { CartProvider } from "@components/ShoppingCart/CartContent";
-import WebshopHeader from "@/app/components/Header/WebshopHeader";
+import WebshopHeader from "@/app/components/Header/webshopHeader";
 
 const ballet = Ballet({
   variable: "--font-ballet",
